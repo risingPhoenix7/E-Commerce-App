@@ -1,0 +1,54 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'item_details.g.dart';
+
+@JsonSerializable()
+class ItemDetails {
+  final String? name;
+  final int? id;
+  final String? description;
+  final String? seller_name;
+  final List<String>? images;
+  final double? rating;
+  final List<ReviewDetails>? reviews;
+  final int? price;
+
+  ItemDetails({
+    this.name,
+    this.id,
+    this.seller_name,
+    this.description,
+    this.images,
+    this.rating,
+    this.reviews,
+    this.price,
+  });
+
+  factory ItemDetails.fromJson(Map<String, dynamic> json) =>
+      _$ItemDetailsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ItemDetailsToJson(this);
+}
+
+@JsonSerializable()
+class ReviewDetails {
+  final String? title;
+  final String? description;
+  final String? reviewer_name;
+  final double? rating;
+  final List<String>? imageUrls;
+
+  ReviewDetails({
+    this.title,
+    this.description,
+    this.imageUrls,
+    this.reviewer_name,
+    this.rating,
+  });
+
+  factory ReviewDetails.fromJson(Map<String, dynamic> json) =>
+      _$ReviewDetailsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ReviewDetailsToJson(this);
+}
+
