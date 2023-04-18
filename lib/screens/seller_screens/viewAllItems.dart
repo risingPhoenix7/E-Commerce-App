@@ -153,8 +153,8 @@ class SellerItemDetailsCard extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: Image.network(
-                    "${itemDetails.images?[0] ?? "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dreamstime.com%2Fno-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-image132482953&psig=AOvVaw0uyzFH2pH9op8vngJgMBRs&ust=1681911455790000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCOCFqMXGs_4CFQAAAAAdAAAAABAI"}"),
+                child: Image.network(itemDetails.images?[0] ??
+                    "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg"),
               ),
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {

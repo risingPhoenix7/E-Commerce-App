@@ -102,19 +102,21 @@ class _AddItemPage2State extends State<AddItemPage2> {
                             controller: detailsController,
                             text: 'Item Details',
                           ),
-                          DropdownButton<Category>(
-                            value: _selectedCategory,
-                            items: widget.categories.map((Category category) {
-                              return DropdownMenuItem<Category>(
-                                value: category,
-                                child: Text(category.name!),
-                              );
-                            }).toList(),
-                            onChanged: (Category? category) {
-                              setState(() {
-                                _selectedCategory = category!;
-                              });
-                            },
+                          Center(
+                            child: DropdownButton<Category>(
+                              value: _selectedCategory,
+                              items: widget.categories.map((Category category) {
+                                return DropdownMenuItem<Category>(
+                                  value: category,
+                                  child: Text(category.name!),
+                                );
+                              }).toList(),
+                              onChanged: (Category? category) {
+                                setState(() {
+                                  _selectedCategory = category!;
+                                });
+                              },
+                            ),
                           ),
                           Center(
                             child: ElevatedButton(
