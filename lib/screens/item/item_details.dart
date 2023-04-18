@@ -198,15 +198,18 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                     .showSnackBar(SnackBar(
                                                         content: Text(
                                                             "Please add delivery address in your profile")));
+                                              } else {
+                                                await CartViewModel
+                                                    .addItemToCart(
+                                                        itemDetails.id!,
+                                                        quantity);
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            "Item added to cart")));
+                                                Navigator.pushNamed(
+                                                    context, '/cart');
                                               }
-                                              await CartViewModel.addItemToCart(
-                                                  itemDetails.id!, quantity);
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                      content: Text(
-                                                          "Item added to cart")));
-                                              Navigator.pushNamed(
-                                                  context, '/cart');
                                             } catch (e) {
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(SnackBar(
@@ -383,20 +386,56 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
                                             child: TextButton(
-                                              onPressed: () {
+                                              onPressed: () async {
                                                 if (UserDetailsViewModel
-                                                            .userDetailsModel ==
-                                                        null ||
-                                                    UserDetailsViewModel
-                                                            .userDetailsModel!
-                                                            .id ==
-                                                        null) {
-                                                  Navigator.pushNamed(
-                                                      context, '/login');
+                                                    .userDetailsModel ==
+                                                    null) {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              LoginPage()));
                                                   return;
                                                 }
-                                                Navigator.pushNamed(
-                                                    context, '/cart');
+                                                try {
+                                                  print("HIU");
+                                                  print(
+                                                      "UserDetailsViewModel.userDetailsModel!.delivery_address2 ${UserDetailsViewModel.userDetailsModel!.delivery_address2}");
+                                                  if (UserDetailsViewModel.userDetailsModel!.delivery_address2 == null ||
+                                                      UserDetailsViewModel
+                                                          .userDetailsModel!
+                                                          .delivery_address1 ==
+                                                          null ||
+                                                      UserDetailsViewModel
+                                                          .userDetailsModel!
+                                                          .delivery_address2!
+                                                          .isEmpty ||
+                                                      UserDetailsViewModel
+                                                          .userDetailsModel!
+                                                          .delivery_address1!
+                                                          .isEmpty) {
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            "Please add delivery address in your profile")));
+                                                  } else {
+                                                    await CartViewModel
+                                                        .addItemToCart(
+                                                        itemDetails.id!,
+                                                        quantity);
+                                                    ScaffoldMessenger.of(context)
+                                                        .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            "Item added to cart")));
+                                                    Navigator.pushNamed(
+                                                        context, '/cart');
+                                                  }
+                                                } catch (e) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                      content:
+                                                      Text(e.toString())));
+                                                }
                                               },
                                               child: Text(
                                                 "Add to cart",

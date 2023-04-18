@@ -61,3 +61,4 @@ class PostCartItem {
 
   Map<String, dynamic> toJson() => _$PostCartItemToJson(this);
 }
+

@@ -26,13 +26,12 @@ class _ChangeDetailsRestClient implements ChangeDetailsRestClient {
     access,
   ) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'User-ID': access};
-    _headers.removeWhere((k, v) => v == null);
+    final queryParameters = <String, dynamic>{r'userId': access};
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(userDetailsModel);
     await _dio.fetch<void>(_setStreamType<void>(Options(
-      method: 'PATCH',
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
@@ -51,13 +50,12 @@ class _ChangeDetailsRestClient implements ChangeDetailsRestClient {
     access,
   ) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'User-ID': access};
-    _headers.removeWhere((k, v) => v == null);
+    final queryParameters = <String, dynamic>{r'userId': access};
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(userDetailsModel);
     await _dio.fetch<void>(_setStreamType<void>(Options(
-      method: 'PATCH',
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
@@ -76,13 +74,12 @@ class _ChangeDetailsRestClient implements ChangeDetailsRestClient {
     access,
   ) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'User-ID': access};
-    _headers.removeWhere((k, v) => v == null);
+    final queryParameters = <String, dynamic>{r'userId': access};
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(userDetailsModel);
     await _dio.fetch<void>(_setStreamType<void>(Options(
-      method: 'PATCH',
+      method: 'PUT',
       headers: _headers,
       extra: _extra,
     )
@@ -98,9 +95,8 @@ class _ChangeDetailsRestClient implements ChangeDetailsRestClient {
   @override
   Future<UserDetailsModel> updateProfile(access) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'User-ID': access};
-    _headers.removeWhere((k, v) => v == null);
+    final queryParameters = <String, dynamic>{r'userId': access};
+    final _headers = <String, dynamic>{};
     final Map<String, dynamic>? _data = null;
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<UserDetailsModel>(Options(

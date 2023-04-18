@@ -10,6 +10,7 @@ class MiniItemDetails {
    String? image;
   final double? rating;
   final int? price;
+  final String? status;
 
   MiniItemDetails({
     this.name,
@@ -18,6 +19,7 @@ class MiniItemDetails {
     this.image,
     this.rating,
     this.price,
+    this.status,
   });
 
   factory MiniItemDetails.fromJson(Map<String, dynamic> json) =>

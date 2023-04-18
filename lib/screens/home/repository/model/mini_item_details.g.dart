@@ -14,6 +14,7 @@ MiniItemDetails _$MiniItemDetailsFromJson(Map<String, dynamic> json) =>
       image: json['image'] as String?,
       rating: (json['rating'] as num?)?.toDouble(),
       price: json['price'] as int?,
+      status: json['status'] as String?,
     );
 
 Map<String, dynamic> _$MiniItemDetailsToJson(MiniItemDetails instance) =>
@@ -24,4 +25,5 @@ Map<String, dynamic> _$MiniItemDetailsToJson(MiniItemDetails instance) =>
       'image': instance.image,
       'rating': instance.rating,
       'price': instance.price,
+      'status': instance.status,
     };

@@ -4,6 +4,7 @@ import 'package:definitely_not_amazon/screens/seller_screens/model/sellerItemDet
 import 'package:definitely_not_amazon/screens/seller_screens/viewmodel/uploadSellerDetails.dart';
 import 'package:definitely_not_amazon/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddItemPage2 extends StatefulWidget {
@@ -16,6 +17,7 @@ class AddItemPage2 extends StatefulWidget {
 
 class _AddItemPage2State extends State<AddItemPage2> {
   TextEditingController detailsController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -96,6 +98,13 @@ class _AddItemPage2State extends State<AddItemPage2> {
                             controller: detailsController,
                             text: 'Item Details',
                           ),
+                          CustomTextField(
+                            controller: categoryController,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
+                            text: 'Item Details',
+                          ),
                           Center(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -134,10 +143,11 @@ class _AddItemPage2State extends State<AddItemPage2> {
                                   try {
                                     widget.sellerItemDetails.description =
                                         detailsController.text;
-
                                     String output = SellerScreensViewModel
                                         .uploadSellerDetails(
-                                            widget.sellerItemDetails, images);
+                                            sellerItemDetails:
+                                                widget.sellerItemDetails,
+                                            images: images);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(output),

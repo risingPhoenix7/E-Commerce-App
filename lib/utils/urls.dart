@@ -17,8 +17,9 @@ class Urls {
   static const kUpdateProfilePath = "/users/profile/";
   static const kgetFullItemDetailsPath = "/market/item/";
   static const kPostItemDetailsPath = "/market/item/";
-  static const kGetCartPath = "/users/my-cart/";
+  static const kGetCartPath = "/users/view-cart/";
   static const kAddToCartPath = "/users/update-cart/";
   static const kPlaceOrderPath = "/users/place-order/";
   static const kgetPastOrdersPath = "/users/past-orders/";
+  static const kgetOrderDetailsPath = "/users/past-order-detail/";
 }

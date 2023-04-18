@@ -1,5 +1,6 @@
 import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
 import 'package:definitely_not_amazon/screens/cart/orders_screen.dart';
+import 'package:definitely_not_amazon/screens/seller_screens/viewAllItems.dart';
 import 'package:definitely_not_amazon/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,6 +58,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                         currentValue:
                             UserDetailsViewModel.userDetailsModel?.age ?? ""),
+                    EditGeneralInput(
+                        name: 'Sex',
+                        givenString: "sex",
+                        isCompulsory: false,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'[MFO]')),
+                          //LIMIT TO ONE CHARACTER
+                          LengthLimitingTextInputFormatter(1)
+                        ],
+                        currentValue:
+                            UserDetailsViewModel.userDetailsModel?.sex ?? ""),
                   ],
                   title: 'Edit Bio Data'),
               name: 'Edit Bio Data',
@@ -65,6 +78,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               screen: EditGeneral(
                   intnumber: 1,
                   editgenerallist: [
+                    EditGeneralInput(
+                        name: 'Store Name',
+                        isCompulsory: false,
+                        givenString: "store_name",
+                        currentValue:
+                            UserDetailsViewModel.userDetailsModel?.store_name ??
+                                ""),
                     EditGeneralInput(
                         name: 'Address 1',
                         isCompulsory: false,
@@ -159,6 +179,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               screen:
                   CustomScaffold(body: const OrdersScreen(), title: "Profile"),
               name: 'View orders',
+            ),
+
+            CustomContainerWidget(
+              screen:
+              CustomScaffold(body:  SellerViewItemsScreen(), title: "Profile"),
+              name: 'Go to seller home page',
             ),
             const SizedBox(height: 50)
           ],

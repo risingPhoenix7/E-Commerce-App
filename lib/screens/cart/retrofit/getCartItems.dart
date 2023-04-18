@@ -1,4 +1,5 @@
 import 'package:definitely_not_amazon/screens/cart/model/viewCartItemsModel.dart';
+import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_details.dart';
 import 'package:dio/dio.dart';
 import 'package:retrofit/http.dart';
 
@@ -11,15 +12,19 @@ abstract class CartRestClient {
   factory CartRestClient(Dio dio, {String baseUrl}) = _CartRestClient;
 
   @GET(Urls.kGetCartPath)
-  Future<List<CartItem>> getAllCart(@Header("User-ID") String userID);
+  Future<List<CartItem>> getAllCart(@Query("userId") String userID);
 
   @POST(Urls.kAddToCartPath)
-  Future<List<CartItem>> addToCart(
-      @Header("User-id") String userID, @Body() PostCartItem postCartItem);
+  Future<void> addToCart(
+      @Query("userId") String userID, @Body() PostCartItem postCartItem);
 
   @POST(Urls.kPlaceOrderPath)
-  Future<List<CartItem>> placeOrder(@Header("user-id") String userID);
+  Future<List<CartItem>> placeOrder(@Query("userId") String userID);
 
   @GET(Urls.kgetPastOrdersPath)
-  Future<List<OrderItem>> getPastOrders(@Header("user-id") String userID);
+  Future<List<OrderItem>> getPastOrders(@Query("userId") String userID);
+
+  @GET(Urls.kgetOrderDetailsPath)
+  Future<List<MiniItemDetails>> getPastOrderDetails(
+      @Query("userId") String userID, @Query("order_id") String orderID);
 }

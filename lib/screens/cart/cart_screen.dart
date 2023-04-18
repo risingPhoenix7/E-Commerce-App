@@ -16,12 +16,13 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   bool isLoading = true;
-  List<CartItem> cartItems = [];
+  double totalPrice = 0;
 
   getCartItems() async {
     try {
-      cartItems = await CartViewModel.getItemsInCart();
+      await CartViewModel.getItemsInCart();
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.toString()),
       ));
@@ -31,9 +32,37 @@ class _CartScreenState extends State<CartScreen> {
     });
   }
 
+  calculateTotalPrice() {
+    double totalPrice = 0;
+    for (int i = 0; i < CartViewModel.cartItems.length; i++) {
+      int quantity = CartViewModel.cartItems[i].quantity ?? 0;
+      totalPrice =
+          totalPrice + (CartViewModel.cartItems[i].price ?? 0.0 * quantity);
+      setState(() {
+        this.totalPrice = totalPrice;
+      });
+    }
+  }
+
   @override
   void initState() {
     getCartItems();
+    CartViewModel.refreshTotal.addListener(() {
+      calculateTotalPrice();
+    });
+    CartViewModel.removeItemFromCartListener.addListener(() {
+      if (CartViewModel.removeItemFromCartListener.value == -1) {
+        return;
+      }
+      for (int i = 0; i < CartViewModel.cartItems.length; i++) {
+        if (CartViewModel.cartItems[i].item_id ==
+            CartViewModel.removeItemFromCartListener.value) {
+          CartViewModel.cartItems.removeAt(i);
+          setState(() {});
+          break;
+        }
+      }
+    });
     // TODO: implement initState
     super.initState();
   }
@@ -74,142 +103,151 @@ class _CartScreenState extends State<CartScreen> {
                                       fontSize: fontSize * 2.5,
                                       fontWeight: FontWeight.bold)),
                             ),
-                            Column(
-                              children: List.generate(
-                                  cartItems.length,
-                                  (index) => CartItemWidget(
-                                        cartItem: cartItems[index],
-                                      )),
-                            )
+                            CartViewModel.cartItems.isEmpty
+                                ? Center(child: Text("No items in cart"))
+                                : Column(
+                                    children: List.generate(
+                                        CartViewModel.cartItems.length,
+                                        (index) => CartItemWidget(
+                                              cartItem: CartViewModel
+                                                  .cartItems[index],
+                                            )),
+                                  )
                           ],
                         ),
                       ),
                     ),
                   ),
                 ),
-                Expanded(
-                    flex: 2,
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              right: 20, top: 20, bottom: 20),
-                          child: Container(
-                              height: height * 0.2,
-                              color: Colors.white,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Center(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text('Subtotal (1 item): ',
+                CartViewModel.cartItems.isEmpty
+                    ? Container()
+                    : Expanded(
+                        flex: 2,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  right: 20, top: 20, bottom: 20),
+                              child: Container(
+                                  height: height * 0.2,
+                                  color: Colors.white,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text('Subtotal (1 item): ',
+                                                style: TextStyle(
+                                                  fontSize: fontSize * 1.2,
+                                                )),
+                                            Text('₹ $totalPrice ',
+                                                style: TextStyle(
+                                                    fontSize: fontSize * 1.2,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ],
+                                        ),
+                                      ),
+                                      Container(
+                                        height: height * 0.05,
+                                        decoration: BoxDecoration(
+                                            color: Colors.orange,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: TextButton(
+                                          onPressed: () async {
+                                            //TODO: Add payment details
+                                            // Navigator.push(
+                                            //     context,
+                                            //     MaterialPageRoute(
+                                            //         builder: (context) =>
+                                            //             const AddPaymentPage()));
+                                            try {
+                                              await CartViewModel.placeOrder();
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Order placed successfully'),
+                                              ));
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const OrdersScreen()));
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                content: Text(e.toString()),
+                                              ));
+                                            }
+                                          },
+                                          child: Text(
+                                            "Proceed to checkout",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: height * 0.02),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 20.0),
+                              child: Container(
+                                  height: height * 0.24,
+                                  color: Colors.white,
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Center(
+                                        child: Text('Add coupon code',
                                             style: TextStyle(
                                               fontSize: fontSize * 1.2,
                                             )),
-                                        Text('₹ 56.02 ',
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: width * 0.05),
+                                        child: TextField(
+                                          decoration: InputDecoration(
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10))),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: height * 0.05,
+                                        width: width * 0.2,
+                                        decoration: BoxDecoration(
+                                            color: Colors.orange,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: TextButton(
+                                          onPressed: () {},
+                                          child: Text(
+                                            "Verify",
                                             style: TextStyle(
-                                                fontSize: fontSize * 1.2,
-                                                fontWeight: FontWeight.bold)),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    height: height * 0.05,
-                                    decoration: BoxDecoration(
-                                        color: Colors.orange,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: TextButton(
-                                      onPressed: () async {
-                                        //TODO: Add payment details
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //         builder: (context) =>
-                                        //             const AddPaymentPage()));
-                                        try {
-                                          await CartViewModel.placeOrder();
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: Text(
-                                                'Order placed successfully'),
-                                          ));
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const OrdersScreen()));
-                                        } catch (e) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                            content: Text(e.toString()),
-                                          ));
-                                        }
-                                      },
-                                      child: Text(
-                                        "Proceed to checkout",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: height * 0.02),
+                                                color: Colors.black,
+                                                fontSize: height * 0.02),
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 20.0),
-                          child: Container(
-                              height: height * 0.24,
-                              color: Colors.white,
-                              child: Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Center(
-                                    child: Text('Add coupon code',
-                                        style: TextStyle(
-                                          fontSize: fontSize * 1.2,
-                                        )),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: width * 0.05),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          border: OutlineInputBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10))),
-                                    ),
-                                  ),
-                                  Container(
-                                    height: height * 0.05,
-                                    width: width * 0.2,
-                                    decoration: BoxDecoration(
-                                        color: Colors.orange,
-                                        borderRadius:
-                                            BorderRadius.circular(10)),
-                                    child: TextButton(
-                                      onPressed: () {},
-                                      child: Text(
-                                        "Verify",
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: height * 0.02),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        )
-                      ],
-                    ))
+                                    ],
+                                  )),
+                            )
+                          ],
+                        ))
               ],
             ),
           );
@@ -225,12 +263,16 @@ class CartItemWidget extends StatefulWidget {
 }
 
 class _CartItemWidgetState extends State<CartItemWidget> {
-  late int quantity;
+  double totalPrice = 0.0;
+
+  updateTotalPrice() {
+    totalPrice = (widget.cartItem.price ?? 0.0) * widget.cartItem.quantity!;
+    CartViewModel.refreshTotal.notifyListeners();
+  }
 
   @override
   void initState() {
-    quantity = widget.cartItem.quantity ?? 1;
-
+    updateTotalPrice();
     // TODO: implement initState
     super.initState();
   }
@@ -315,13 +357,15 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                               borderRadius: BorderRadius.circular(10)),
                           child: TextButton(
                             onPressed: () async {
-                              if (quantity > 1) {
+                              if (widget.cartItem.quantity! > 1) {
                                 try {
                                   await CartViewModel.addItemToCart(
-                                      widget.cartItem.item_id!, quantity);
-                                  setState(() {
-                                    quantity--;
-                                  });
+                                      widget.cartItem.item_id!,
+                                      widget.cartItem.quantity! - 1);
+                                  widget.cartItem.quantity =
+                                      widget.cartItem.quantity! - 1;
+                                  updateTotalPrice();
+                                  setState(() {});
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(content: Text(e.toString())));
@@ -343,7 +387,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                               borderRadius: BorderRadius.circular(10)),
                           child: Center(
                             child: Text(
-                              quantity.toString(),
+                              widget.cartItem.quantity.toString(),
                               style: const TextStyle(
                                 color: Colors.black,
                               ),
@@ -357,13 +401,14 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                               borderRadius: BorderRadius.circular(10)),
                           child: TextButton(
                             onPressed: () async {
-                              //TODO: ADD check
                               try {
                                 await CartViewModel.addItemToCart(
-                                    widget.cartItem.item_id!, quantity);
-                                setState(() {
-                                  quantity++;
-                                });
+                                    widget.cartItem.item_id!,
+                                    widget.cartItem.quantity! + 1);
+                                widget.cartItem.quantity =
+                                    widget.cartItem.quantity! + 1;
+                                updateTotalPrice();
+                                setState(() {});
                               } catch (e) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text(e.toString())));
@@ -380,7 +425,20 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            try {
+                              await CartViewModel.addItemToCart(
+                                  widget.cartItem.item_id!, 0);
+                              CartViewModel.removeItemFromCartListener.value =
+                                  widget.cartItem.item_id!;
+                              CartViewModel.removeItemFromCartListener
+                                  .notifyListeners();
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(e.toString())));
+                              print(e);
+                            }
+                          },
                           child: Text("Delete",
                               style: TextStyle(
                                   color: Colors.red, fontSize: fontSize * 1.2)),
@@ -396,7 +454,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('₹ 56.02 ',
+                  Text('₹ ${widget.cartItem.price}',
                       style: TextStyle(
                           fontSize: fontSize * 1.6,
                           fontWeight: FontWeight.bold)),
@@ -407,7 +465,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                           style: TextStyle(
                             fontSize: fontSize * 1.2,
                           )),
-                      Text('₹ 56.02 ',
+                      Text('₹ $totalPrice ',
                           style: TextStyle(
                               fontSize: fontSize * 1.2,
                               fontWeight: FontWeight.bold)),

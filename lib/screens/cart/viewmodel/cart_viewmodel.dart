@@ -2,11 +2,18 @@ import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
 import 'package:definitely_not_amazon/screens/cart/model/viewCartItemsModel.dart';
 import 'package:definitely_not_amazon/screens/cart/retrofit/getCartItems.dart';
+import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_details.dart';
 import 'package:definitely_not_amazon/utils/urls.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 class CartViewModel {
-  static Future<List<CartItem>> getItemsInCart() async {
+  static ValueNotifier<int> removeItemFromCartListener = ValueNotifier(-1);
+  static ChangeNotifier refreshTotal = ChangeNotifier();
+  static List<CartItem> cartItems = [];
+
+
+  static Future<void> getItemsInCart() async {
     final dio = Dio();
     dio.interceptors.add(ChuckerDioInterceptor());
     final client = CartRestClient(dio);
@@ -29,7 +36,10 @@ class CartViewModel {
 
       throw Exception("Error in getting cart Items");
     });
-    return cartItems;
+    if(cartItems.isNotEmpty){
+      CartViewModel.cartItems = cartItems;
+    }
+
   }
 
   static Future<List<OrderItem>> getOrders() async {
@@ -47,6 +57,26 @@ class CartViewModel {
       throw Exception("Error in getting past orders");
     });
     return cartItems;
+  }
+
+//todo : not yet implemented
+  static Future<List<MiniItemDetails>> getOrderDetails(int order_id) async {
+    final dio = Dio();
+    dio.interceptors.add(ChuckerDioInterceptor());
+    final client = CartRestClient(dio);
+    if (UserDetailsViewModel.userDetailsModel == null ||
+        UserDetailsViewModel.userDetailsModel!.id == null) {
+      throw Exception("Not allowed to access orders. Please login first");
+    }
+    List<MiniItemDetails> orderItemDetails = await client
+        .getPastOrderDetails(
+            UserDetailsViewModel.userDetailsModel!.id.toString(),
+            order_id.toString())
+        .catchError((Object obj) {
+      print(obj.toString());
+      throw Exception("Error in getting order details");
+    });
+    return orderItemDetails;
   }
 
   static Future<void> addItemToCart(int item_id, int quantity) async {

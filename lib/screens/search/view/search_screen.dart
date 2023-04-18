@@ -2,7 +2,6 @@ import 'package:definitely_not_amazon/screens/home/repository/model/item_details
 import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_details.dart';
 import 'package:definitely_not_amazon/screens/home/viewmodel/home_view_model.dart';
 import 'package:definitely_not_amazon/screens/item/item_details.dart';
-import 'package:definitely_not_amazon/screens/seller_screens/editItemDetailsScreen.dart';
 import 'package:definitely_not_amazon/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -12,7 +11,6 @@ class SearchScreen extends StatefulWidget {
   SearchScreen({Key? key, required this.items, required this.searchText})
       : super(key: key);
   String? searchText;
-
   List<MiniItemDetails>? items;
 
   @override
@@ -32,18 +30,20 @@ class _SearchScreenState extends State<SearchScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  const Text("Showing results for "),
-                  Text(
-                    searchText!,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  )
-                ],
-              ),
-            ),
+            searchText == null
+                ? Container()
+                : Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        const Text("Showing results for "),
+                        Text(
+                          searchText,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      ],
+                    ),
+                  ),
             const SizedBox(height: 10),
             items == null || items.isEmpty
                 ? Expanded(child: Center(child: const Text("No results found")))
@@ -155,6 +155,14 @@ class ItemDetailsCard extends StatelessWidget {
                           ),
                         ],
                       ),
+                      itemDetails.status != null &&
+                              itemDetails.status!.isNotEmpty
+                          ? Text(itemDetails.status!,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: fontSize,
+                                  color: Colors.red))
+                          : Container(),
                     ],
                   );
                 },

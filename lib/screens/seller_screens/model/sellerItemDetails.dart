@@ -9,6 +9,7 @@ class SellerItemDetails {
   final double? mrp;
   final double? price;
   final int? quantity;
+  final int? category_id;
 
   SellerItemDetails({
     this.name,
@@ -16,6 +17,7 @@ class SellerItemDetails {
     this.mrp,
     this.price,
     this.quantity,
+    this.category_id,
   });
 
   factory SellerItemDetails.fromJson(Map<String, dynamic> json) =>

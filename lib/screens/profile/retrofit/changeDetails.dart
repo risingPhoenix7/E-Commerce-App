@@ -11,20 +11,20 @@ abstract class ChangeDetailsRestClient {
   factory ChangeDetailsRestClient(Dio dio, {String baseUrl}) =
       _ChangeDetailsRestClient;
 
-  @PATCH(Urls.kUpdateUserPath)
+  @PUT(Urls.kUpdateUserPath)
   Future<void> changeUserDetails(@Body() Map<String, dynamic> userDetailsModel,
-      @Header("User-ID") String access);
+      @Query("userId") String access);
 
-  @PATCH(Urls.kUpdateCustomerPath)
+  @PUT(Urls.kUpdateCustomerPath)
   Future<void> changeCustomerDetails(
       @Body() Map<String, dynamic> userDetailsModel,
-      @Header("User-ID") String access);
+      @Query("userId") String access);
 
-  @PATCH(Urls.kUpdateSellerPath)
+  @PUT(Urls.kUpdateSellerPath)
   Future<void> changeSellerDetails(
       @Body() Map<String, dynamic> userDetailsModel,
-      @Header("User-ID") String access);
+      @Query("userId") String access);
 
   @GET(Urls.kUpdateProfilePath)
-  Future<UserDetailsModel> updateProfile(@Header("User-ID") String access);
+  Future<UserDetailsModel> updateProfile(@Query("userId") String access);
 }

@@ -2,6 +2,8 @@ import 'dart:math';
 
 import 'package:definitely_not_amazon/screens/cart/model/viewCartItemsModel.dart';
 import 'package:definitely_not_amazon/screens/cart/viewmodel/cart_viewmodel.dart';
+import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_details.dart';
+import 'package:definitely_not_amazon/screens/search/view/search_screen.dart';
 import 'package:definitely_not_amazon/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -202,19 +204,44 @@ class OrderItemWidget extends StatelessWidget {
   OrderItemWidget({Key? key, required this.orderItem}) : super(key: key);
   OrderItem orderItem;
 
+  getOrderDetails() async {
+    List<MiniItemDetails> items =
+        await CartViewModel.getOrderDetails(orderItem.id!);
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        children: [
-          Text(orderItem.id.toString()),
-          Text(orderItem.amount.toString()),
-          Text(orderItem.payment_uid.toString()),
-          Text(orderItem.created_at.toString())
-        ],
+    return GestureDetector(
+      onTap: () async {
+        List<MiniItemDetails> order=[];
+
+        try {
+          order = await getOrderDetails();
+        } catch (e) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(e.toString())));
+        }
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SearchScreen(
+                      searchText: null,
+                      items: order,
+                    )));
+      },
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey),
+            borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            Text(orderItem.id.toString()),
+            Text(orderItem.amount.toString()),
+            Text(orderItem.payment_uid.toString()),
+            Text(orderItem.created_at.toString())
+          ],
+        ),
       ),
     );
   }
