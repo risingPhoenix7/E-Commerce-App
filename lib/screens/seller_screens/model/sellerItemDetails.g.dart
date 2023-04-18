@@ -13,6 +13,7 @@ SellerItemDetails _$SellerItemDetailsFromJson(Map<String, dynamic> json) =>
       mrp: (json['mrp'] as num?)?.toDouble(),
       price: (json['price'] as num?)?.toDouble(),
       quantity: json['quantity'] as int?,
+      category_id: json['category_id'] as int?,
     );
 
 Map<String, dynamic> _$SellerItemDetailsToJson(SellerItemDetails instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$SellerItemDetailsToJson(SellerItemDetails instance) =>
       'mrp': instance.mrp,
       'price': instance.price,
       'quantity': instance.quantity,
+      'category_id': instance.category_id,
     };

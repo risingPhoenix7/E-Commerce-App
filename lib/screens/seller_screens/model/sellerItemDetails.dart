@@ -4,8 +4,9 @@ part 'sellerItemDetails.g.dart';
 
 @JsonSerializable()
 class SellerItemDetails {
+  int? item_id;
   final String? name;
-   String? description;
+  String? description;
   final double? mrp;
   final double? price;
   final int? quantity;
@@ -13,6 +14,7 @@ class SellerItemDetails {
 
   SellerItemDetails({
     this.name,
+    this.item_id,
     this.description,
     this.mrp,
     this.price,
@@ -25,5 +27,3 @@ class SellerItemDetails {
 
   Map<String, dynamic> toJson() => _$SellerItemDetailsToJson(this);
 }
-
-

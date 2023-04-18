@@ -1,3 +1,4 @@
+import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_details.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'viewCartItemsModel.g.dart';
@@ -62,3 +63,65 @@ class PostCartItem {
   Map<String, dynamic> toJson() => _$PostCartItemToJson(this);
 }
 
+@JsonSerializable()
+class PostOrderDetails {
+  String payment_uid;
+  String paymentType;
+  String? coupon_code;
+
+  PostOrderDetails({
+    required this.payment_uid,
+    required this.paymentType,
+    this.coupon_code,
+  });
+
+  factory PostOrderDetails.fromJson(Map<String, dynamic> json) =>
+      _$PostOrderDetailsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PostOrderDetailsToJson(this);
+}
+
+@JsonSerializable()
+class SingleOrderDetails {
+  SingleOrderDetails({
+    required this.order,
+    required this.order_items,
+  });
+
+  final Order order;
+  final List<MiniItemDetails> order_items;
+
+  factory SingleOrderDetails.fromJson(Map<String, dynamic> json) =>
+      _$SingleOrderDetailsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SingleOrderDetailsToJson(this);
+}
+
+@JsonSerializable()
+class Order {
+  Order({
+    this.id,
+    this.paymentUid,
+    this.amount,
+    this.orderTime,
+    this.addressLine1,
+    this.addressLine2,
+    this.city,
+    this.country,
+    this.pincode,
+  });
+
+  final int? id;
+  final String? paymentUid;
+  final int? amount;
+  final String? orderTime;
+  final String? addressLine1;
+  final String? addressLine2;
+  final String? city;
+  final String? country;
+  final String? pincode;
+
+  factory Order.fromJson(Map<String, dynamic> json) => _$OrderFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OrderToJson(this);
+}

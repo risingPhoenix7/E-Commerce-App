@@ -176,14 +176,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
               name: 'Edit Delivery Address',
             ),
             CustomContainerWidget(
-              screen:
-                  CustomScaffold(body: const OrdersScreen(), title: "Profile"),
+              screen:OrdersScreen(),
               name: 'View orders',
             ),
-
             CustomContainerWidget(
-              screen:
-              CustomScaffold(body:  SellerViewItemsScreen(), title: "Profile"),
+              screen: SellerViewItemsScreen(),
               name: 'Go to seller home page',
             ),
             const SizedBox(height: 50)

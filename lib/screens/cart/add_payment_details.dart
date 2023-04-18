@@ -1,19 +1,20 @@
 import 'dart:math';
 
-import 'package:definitely_not_amazon/screens/login/signup_page2.dart';
 import 'package:definitely_not_amazon/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
 
+import 'orders_screen.dart';
+import 'viewmodel/cart_viewmodel.dart';
+
 class AddPaymentPage extends StatefulWidget {
-  const AddPaymentPage({Key? key}) : super(key: key);
+  AddPaymentPage({Key? key, this.couponCode}) : super(key: key);
+  String? couponCode;
 
   @override
   State<AddPaymentPage> createState() => _AddPaymentPageState();
 }
 
 class _AddPaymentPageState extends State<AddPaymentPage> {
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController passwordController2 = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String _paymentMethod = 'UPI';
 
@@ -95,7 +96,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                               Row(
                                 children: [
                                   Radio(
-                                    value: 'CREDIT',
+                                    value: 'credit',
                                     groupValue: _paymentMethod,
                                     onChanged: (value) {
                                       setState(() {
@@ -105,7 +106,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                                   ),
                                   Text('Credit'),
                                   Radio(
-                                    value: 'DEBIT',
+                                    value: 'debit',
                                     groupValue: _paymentMethod,
                                     onChanged: (value) {
                                       setState(() {
@@ -115,7 +116,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                                   ),
                                   Text('Debit'),
                                   Radio(
-                                    value: 'UPI',
+                                    value: 'upi',
                                     groupValue: _paymentMethod,
                                     onChanged: (value) {
                                       setState(() {
@@ -125,7 +126,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                                   ),
                                   Text('UPI'),
                                   Radio(
-                                    value: 'bank_transfer',
+                                    value: 'bank transfer',
                                     groupValue: _paymentMethod,
                                     onChanged: (value) {
                                       setState(() {
@@ -142,24 +143,38 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                           GestureDetector(
                             onTap: () async {
                               {
-                                if (passwordController.text !=
-                                    passwordController2.text) {
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(const SnackBar(
-                                    content:
-                                        Text("Password fields don't match"),
-                                  ));
+                                if (_paymentMethod.isEmpty ||
+                                    uidController.text.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Please fill all the fields'),
+                                    ),
+                                  );
                                 } else {
                                   final form = _formKey.currentState!;
                                   if (form.validate()) {
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) => SignupPage2(
-                                                password2:
-                                                    passwordController2.text,
-                                                password1:
-                                                    passwordController.text,
-                                                email: uidController.text)));
+                                    try {
+                                      await CartViewModel.placeOrder(
+                                          _paymentMethod,
+                                          uidController.text,
+                                          widget.couponCode);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                        content:
+                                            Text('Order placed successfully'),
+                                      ));
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  OrdersScreen()));
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                        content: Text(e.toString()),
+                                      ));
+                                    }
                                   }
                                 }
                               }

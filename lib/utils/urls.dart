@@ -22,4 +22,8 @@ class Urls {
   static const kPlaceOrderPath = "/users/place-order/";
   static const kgetPastOrdersPath = "/users/past-orders/";
   static const kgetOrderDetailsPath = "/users/past-order-detail/";
+  static const kVerifyCouponCodePath = "/market/verify-coupon/";
+  //TODO: Add the rest of the paths
+  static const kgetSellerItems = "/market/verify-coupon/";
+  static const keditSellerItems = "/market/verify-coupon/";
 }

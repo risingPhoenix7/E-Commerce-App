@@ -1,13 +1,12 @@
 import 'package:definitely_not_amazon/screens/home/repository/model/item_details.dart';
-import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_details.dart';
-import 'package:definitely_not_amazon/screens/home/viewmodel/home_view_model.dart';
-import 'package:definitely_not_amazon/screens/item/item_details.dart';
 import 'package:definitely_not_amazon/screens/seller_screens/viewmodel/uploadSellerDetails.dart';
 import 'package:definitely_not_amazon/widgets/custom_appbar.dart';
 import 'package:definitely_not_amazon/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+
+import 'editItemDetailsScreen.dart';
 
 class SellerViewItemsScreen extends StatefulWidget {
   SellerViewItemsScreen({Key? key}) : super(key: key);
@@ -18,23 +17,23 @@ class SellerViewItemsScreen extends StatefulWidget {
 
 class _SellerViewItemsScreenState extends State<SellerViewItemsScreen> {
   bool isLoading = true;
-  List<MiniItemDetails> items = [];
+  List<ItemDetails> items = [];
 
-  // getSellerItems() async {
-  //   try {
-  //     items = await SellerScreensViewModel.getSellerItems();
-  //   } catch (e) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(SnackBar(content: Text(e.toString())));
-  //   }
-  //   setState(() {
-  //     isLoading = false;
-  //   });
-  // }
+  getSellerItems() async {
+    try {
+      items = await SellerScreensViewModel.getSellerItems();
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.toString())));
+    }
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   void initState() {
-    // getSellerItems();
+    getSellerItems();
     // TODO: implement initState
     super.initState();
   }
@@ -77,21 +76,18 @@ class _SellerViewItemsScreenState extends State<SellerViewItemsScreen> {
 class SellerItemDetailsCard extends StatelessWidget {
   const SellerItemDetailsCard({Key? key, required this.itemDetails})
       : super(key: key);
-  final MiniItemDetails itemDetails;
+  final ItemDetails itemDetails;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        ItemDetails itemDetails2 = ItemDetails();
         try {
-          itemDetails2 =
-              await HomeScreenViewModel.getItemFullInformation(itemDetails.id!);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ItemDetailsView(
-                        itemDetails: itemDetails2,
+                  builder: (context) => EditItemDetailsScreen(
+                        itemDetails: itemDetails,
                       )));
         } catch (e) {
           ScaffoldMessenger.of(context)
@@ -118,7 +114,8 @@ class SellerItemDetailsCard extends StatelessWidget {
           child: Column(
             children: [
               Expanded(
-                child: Image.network("${itemDetails.image}"),
+                child: Image.network(
+                    "${itemDetails.images?[0] ?? "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.dreamstime.com%2Fno-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-image132482953&psig=AOvVaw0uyzFH2pH9op8vngJgMBRs&ust=1681911455790000&source=images&cd=vfe&ved=0CBEQjRxqFwoTCOCFqMXGs_4CFQAAAAAdAAAAABAI"}"),
               ),
               LayoutBuilder(
                 builder: (BuildContext context, BoxConstraints constraints) {
@@ -131,11 +128,6 @@ class SellerItemDetailsCard extends StatelessWidget {
                     children: [
                       Text(itemDetails.name ?? "IDK",
                           style: TextStyle(fontSize: fontSize * 2)),
-                      Text(itemDetails.seller_name?.toString() ?? "IDK",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: fontSize,
-                              color: Colors.grey)),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

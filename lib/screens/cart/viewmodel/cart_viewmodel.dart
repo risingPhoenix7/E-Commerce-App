@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
 import 'package:definitely_not_amazon/screens/cart/model/viewCartItemsModel.dart';
@@ -6,12 +8,12 @@ import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_de
 import 'package:definitely_not_amazon/utils/urls.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 
 class CartViewModel {
   static ValueNotifier<int> removeItemFromCartListener = ValueNotifier(-1);
   static ChangeNotifier refreshTotal = ChangeNotifier();
   static List<CartItem> cartItems = [];
-
 
   static Future<void> getItemsInCart() async {
     final dio = Dio();
@@ -36,10 +38,9 @@ class CartViewModel {
 
       throw Exception("Error in getting cart Items");
     });
-    if(cartItems.isNotEmpty){
+    if (cartItems.isNotEmpty) {
       CartViewModel.cartItems = cartItems;
     }
-
   }
 
   static Future<List<OrderItem>> getOrders() async {
@@ -68,14 +69,21 @@ class CartViewModel {
         UserDetailsViewModel.userDetailsModel!.id == null) {
       throw Exception("Not allowed to access orders. Please login first");
     }
-    List<MiniItemDetails> orderItemDetails = await client
+    SingleOrderDetails singleOrderDetails = await client
         .getPastOrderDetails(
             UserDetailsViewModel.userDetailsModel!.id.toString(),
             order_id.toString())
-        .catchError((Object obj) {
+        .then((it) {
+      for (int i = 0; i < it.order_items.length; i++) {
+        it.order_items[i].image = it.order_items[i].image =
+            Urls.kImageAppendUrl + it.order_items[i].image.toString();
+      }
+      return it;
+    }).catchError((Object obj) {
       print(obj.toString());
       throw Exception("Error in getting order details");
     });
+    List<MiniItemDetails> orderItemDetails = singleOrderDetails.order_items;
     return orderItemDetails;
   }
 
@@ -96,7 +104,8 @@ class CartViewModel {
     });
   }
 
-  static Future<void> placeOrder() async {
+  static Future<void> placeOrder(
+      String paymentType, String uid, String? couponCode) async {
     final dio = Dio();
     dio.interceptors.add(ChuckerDioInterceptor());
     final client = CartRestClient(dio);
@@ -105,10 +114,32 @@ class CartViewModel {
       throw Exception("Not allowed to add to cart. Please login first");
     }
     await client
-        .placeOrder(UserDetailsViewModel.userDetailsModel!.id.toString())
+        .placeOrder(
+            UserDetailsViewModel.userDetailsModel!.id.toString(),
+            PostOrderDetails(
+                paymentType: paymentType, payment_uid: uid, coupon_code: couponCode))
         .catchError((Object obj) {
       print(obj.toString());
       throw Exception("Error in getting cart Items");
     });
+  }
+
+  static Future<double> verifyCouponCode(String code) async {
+    var request = http.MultipartRequest(
+        'POST', Uri.parse('${Urls.kBaseUrl}/${Urls.kVerifyCouponCodePath}/'));
+    request.fields.addAll({'coupon_code': '$code'});
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      String responseBody = await response.stream.bytesToString();
+      Map<String, dynamic> jsonResponse = jsonDecode(responseBody);
+
+      // Extract 'detail' field as a double
+      double detail = jsonResponse['detail'].toDouble();
+
+      return detail;
+    } else {
+      throw Exception(response.reasonPhrase);
+    }
   }
 }

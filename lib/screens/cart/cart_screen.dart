@@ -1,7 +1,7 @@
 import 'dart:math';
 
+import 'package:definitely_not_amazon/screens/cart/add_payment_details.dart';
 import 'package:definitely_not_amazon/screens/cart/model/viewCartItemsModel.dart';
-import 'package:definitely_not_amazon/screens/cart/orders_screen.dart';
 import 'package:definitely_not_amazon/screens/cart/viewmodel/cart_viewmodel.dart';
 import 'package:definitely_not_amazon/widgets/loader.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,9 @@ class CartScreen extends StatefulWidget {
 class _CartScreenState extends State<CartScreen> {
   bool isLoading = true;
   double totalPrice = 0;
+  double factor = 1;
+  TextEditingController couponController = TextEditingController();
+  String? couponCode;
 
   getCartItems() async {
     try {
@@ -26,6 +29,12 @@ class _CartScreenState extends State<CartScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(e.toString()),
       ));
+    }
+    for (int i = 0; i < CartViewModel.cartItems.length; i++) {
+      int quantity = CartViewModel.cartItems[i].quantity ?? 0;
+      totalPrice =
+          totalPrice + (CartViewModel.cartItems[i].price ?? 0.0 * quantity);
+      totalPrice = totalPrice * factor;
     }
     setState(() {
       isLoading = false;
@@ -38,16 +47,20 @@ class _CartScreenState extends State<CartScreen> {
       int quantity = CartViewModel.cartItems[i].quantity ?? 0;
       totalPrice =
           totalPrice + (CartViewModel.cartItems[i].price ?? 0.0 * quantity);
-      setState(() {
-        this.totalPrice = totalPrice;
-      });
+      if (mounted) {
+        setState(() {
+          this.totalPrice = totalPrice * factor;
+        });
+      }
     }
   }
 
   @override
   void initState() {
     getCartItems();
+
     CartViewModel.refreshTotal.addListener(() {
+      print('goes in here');
       calculateTotalPrice();
     });
     CartViewModel.removeItemFromCartListener.addListener(() {
@@ -104,7 +117,7 @@ class _CartScreenState extends State<CartScreen> {
                                       fontWeight: FontWeight.bold)),
                             ),
                             CartViewModel.cartItems.isEmpty
-                                ? Center(child: Text("No items in cart"))
+                                ? const Center(child: Text("No items in cart"))
                                 : Column(
                                     children: List.generate(
                                         CartViewModel.cartItems.length,
@@ -163,29 +176,13 @@ class _CartScreenState extends State<CartScreen> {
                                         child: TextButton(
                                           onPressed: () async {
                                             //TODO: Add payment details
-                                            // Navigator.push(
-                                            //     context,
-                                            //     MaterialPageRoute(
-                                            //         builder: (context) =>
-                                            //             const AddPaymentPage()));
-                                            try {
-                                              await CartViewModel.placeOrder();
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                content: Text(
-                                                    'Order placed successfully'),
-                                              ));
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const OrdersScreen()));
-                                            } catch (e) {
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(SnackBar(
-                                                content: Text(e.toString()),
-                                              ));
-                                            }
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddPaymentPage(
+                                                            couponCode:
+                                                                couponCode)));
                                           },
                                           child: Text(
                                             "Proceed to checkout",
@@ -219,6 +216,7 @@ class _CartScreenState extends State<CartScreen> {
                                         padding: EdgeInsets.symmetric(
                                             horizontal: width * 0.05),
                                         child: TextField(
+                                          controller: couponController,
                                           decoration: InputDecoration(
                                               border: OutlineInputBorder(
                                                   borderRadius:
@@ -234,7 +232,40 @@ class _CartScreenState extends State<CartScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(10)),
                                         child: TextButton(
-                                          onPressed: () {},
+                                          onPressed: () async {
+                                            if (couponController.text.isEmpty) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    'Please enter coupon code'),
+                                              ));
+                                            } else {
+                                              try {
+                                                double percentage =
+                                                    await CartViewModel
+                                                        .verifyCouponCode(
+                                                            couponController
+                                                                .text);
+                                                couponCode =
+                                                    couponController.text;
+                                                factor = 1 - percentage / 100;
+                                                setState(() {
+                                                  calculateTotalPrice();
+                                                });
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                      "Applied a discount of $percentage%"),
+                                                ));
+                                              } catch (e) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(e.toString()),
+                                                ));
+                                                couponController.text = '';
+                                              }
+                                            }
+                                          },
                                           child: Text(
                                             "Verify",
                                             style: TextStyle(
@@ -267,12 +298,13 @@ class _CartItemWidgetState extends State<CartItemWidget> {
 
   updateTotalPrice() {
     totalPrice = (widget.cartItem.price ?? 0.0) * widget.cartItem.quantity!;
+    print('updated, notify listeners');
     CartViewModel.refreshTotal.notifyListeners();
   }
 
   @override
   void initState() {
-    updateTotalPrice();
+    totalPrice = (widget.cartItem.price ?? 0.0) * widget.cartItem.quantity!;
     // TODO: implement initState
     super.initState();
   }

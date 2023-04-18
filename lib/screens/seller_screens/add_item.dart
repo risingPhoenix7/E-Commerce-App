@@ -108,7 +108,7 @@ class _AddItemPageState extends State<AddItemPage> {
                             ],
                             validator: (value) {
                               if (value!.isEmpty) {
-                                return 'Please enter a valid UID of your transaction';
+                                return 'Please enter a valid value';
                               } else {
                                 if (double.parse(value) <
                                     double.parse(sellingPriceController.text)) {

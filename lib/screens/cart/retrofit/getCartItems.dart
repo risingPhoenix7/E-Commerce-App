@@ -19,12 +19,12 @@ abstract class CartRestClient {
       @Query("userId") String userID, @Body() PostCartItem postCartItem);
 
   @POST(Urls.kPlaceOrderPath)
-  Future<List<CartItem>> placeOrder(@Query("userId") String userID);
+  Future<void> placeOrder(@Query("userId") String userID,@Body() PostOrderDetails postOrderDetails);
 
   @GET(Urls.kgetPastOrdersPath)
   Future<List<OrderItem>> getPastOrders(@Query("userId") String userID);
 
   @GET(Urls.kgetOrderDetailsPath)
-  Future<List<MiniItemDetails>> getPastOrderDetails(
+  Future<SingleOrderDetails> getPastOrderDetails(
       @Query("userId") String userID, @Query("order_id") String orderID);
 }
