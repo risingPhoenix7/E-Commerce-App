@@ -5,10 +5,8 @@ class ErrorDialogue extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Center(
-        child: Icon(Icons.error_outlined, color: Colors.red),
-      ),
+    return Center(
+      child: Icon(Icons.error_outlined, color: Colors.red),
     );
   }
 }

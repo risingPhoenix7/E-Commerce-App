@@ -23,7 +23,10 @@ class _HomeScreenState extends State<HomeScreen> {
   getCategories() async {
     isError = false;
     try {
+      print('getting categories');
       categories = await HomeScreenViewModel.getCategories();
+      print('got categories');
+
       categories.insert(
           0,
           Category(
@@ -32,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   "https://png.pngtree.com/png-vector/20220525/ourmid/pngtree-top-20-label-neon-best-png-image_4737812.png"));
       isError = false;
     } catch (e) {
+      print(e);
       isError = true;
     }
     setState(() {
@@ -47,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('hi');
     var deviceType = getDeviceType(MediaQuery.of(context).size);
 
     return CustomScaffold(
@@ -106,6 +111,7 @@ class _CategoryBoxState extends State<CategoryBox> {
       onTap: () async {
         print("Being pushed");
         List<MiniItemDetails> items = await getItemDetails(widget.isTopCard);
+        print('fewfwef');
         Navigator.push(
             context,
             MaterialPageRoute(

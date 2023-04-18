@@ -81,6 +81,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                         filled: true,
                         fillColor: Colors.white,
                         hintText: 'Search',
+                        contentPadding: EdgeInsets.all(10.0),
                         hintStyle: const TextStyle(color: Colors.black38),
                         enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.black),

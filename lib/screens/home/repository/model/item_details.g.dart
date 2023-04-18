@@ -17,7 +17,10 @@ ItemDetails _$ItemDetailsFromJson(Map<String, dynamic> json) => ItemDetails(
       reviews: (json['reviews'] as List<dynamic>?)
           ?.map((e) => ReviewDetails.fromJson(e as Map<String, dynamic>))
           .toList(),
+      mrp: (json['mrp'] as num?)?.toDouble(),
       price: json['price'] as int?,
+      discount: (json['discount'] as num?)?.toDouble(),
+      quantity: json['quantity'] as int?,
     );
 
 Map<String, dynamic> _$ItemDetailsToJson(ItemDetails instance) =>
@@ -28,8 +31,11 @@ Map<String, dynamic> _$ItemDetailsToJson(ItemDetails instance) =>
       'seller_name': instance.seller_name,
       'images': instance.images,
       'rating': instance.rating,
+      'mrp': instance.mrp,
       'reviews': instance.reviews,
       'price': instance.price,
+      'discount': instance.discount,
+      'quantity': instance.quantity,
     };
 
 ReviewDetails _$ReviewDetailsFromJson(Map<String, dynamic> json) =>

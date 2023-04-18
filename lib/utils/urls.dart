@@ -6,6 +6,7 @@
 // }
 class Urls {
   static const kBaseUrl = "https://ujjwalaggarwal.pythonanywhere.com";
+  static const kImageAppendUrl = "https://ujjwalaggarwal.pythonanywhere.com/backend-media/";
   static const kGetCategoriesPath = "/market/category-list/";
   static const kGetItemsPath = "/market/item-list/";
   static const kCreateUsersPath = "/users/register/";
@@ -15,4 +16,5 @@ class Urls {
   static const kUpdateSellerPath = "/users/update-seller/";
   static const kUpdateProfilePath = "/users/profile/";
   static const kgetFullItemDetailsPath = "/market/item/";
+  static const kPostItemDetailsPath = "/market/item/";
 }

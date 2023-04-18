@@ -7,7 +7,7 @@ class MiniItemDetails {
   final String? name;
   final int? id;
   final String? seller_name;
-  final String? image;
+   String? image;
   final double? rating;
   final int? price;
 
