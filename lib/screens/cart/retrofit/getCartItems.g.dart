@@ -35,7 +35,7 @@ class _CartRestClient implements CartRestClient {
     )
             .compose(
               _dio.options,
-              '/users/view-cart/',
+              '/users/my-cart/',
               queryParameters: queryParameters,
               data: _data,
             )
