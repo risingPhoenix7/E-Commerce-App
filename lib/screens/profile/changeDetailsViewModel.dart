@@ -13,7 +13,7 @@ class ChangeDetailsViewModel {
 
     await client
         .changeUserDetails(userDetailsModel,
-            "Bearer ${UserDetailsViewModel.userDetailsModel!.access}")
+            UserDetailsViewModel.userDetailsModel!.id!.toString())
         .then((it) {})
         .catchError((Object obj) {
       throw Exception("Error in getting categories");
@@ -25,13 +25,15 @@ class ChangeDetailsViewModel {
     final dio = Dio();
     dio.interceptors.add(ChuckerDioInterceptor());
     final client = ChangeDetailsRestClient(dio);
-
+    if(UserDetailsViewModel.userDetailsModel == null || UserDetailsViewModel.userDetailsModel!.id == null){
+      throw Exception("Not allowed to access change details. Please login first");
+    }
     await client
         .changeCustomerDetails(userDetailsModel,
-            "Bearer ${UserDetailsViewModel.userDetailsModel!.access}")
+            UserDetailsViewModel.userDetailsModel!.id!.toString())
         .then((it) {})
         .catchError((Object obj) {
-      throw Exception("Error in getting categories");
+      throw Exception("Error in editing customer details");
     });
   }
 
@@ -43,7 +45,7 @@ class ChangeDetailsViewModel {
 
     await client
         .changeSellerDetails(userDetailsModel,
-            "Bearer ${UserDetailsViewModel.userDetailsModel!.access}")
+            UserDetailsViewModel.userDetailsModel!.id!.toString())
         .then((it) {})
         .catchError((Object obj) {
       throw Exception("Error in getting categories");
@@ -57,11 +59,11 @@ class ChangeDetailsViewModel {
 
     await client
         .updateProfile(
-            "Bearer ${UserDetailsViewModel.userDetailsModel!.access}")
+           UserDetailsViewModel.userDetailsModel!.id!.toString())
         .then((it) {
-      String? access = UserDetailsViewModel.userDetailsModel!.access;
+      int id = UserDetailsViewModel.userDetailsModel!.id!;
       UserDetailsViewModel.userDetailsModel = it;
-      UserDetailsViewModel.userDetailsModel?.access = access;
+      UserDetailsViewModel.userDetailsModel?.id = id;
     }).catchError((Object obj) {
       throw Exception("Error in getting categories");
     });

@@ -7,7 +7,7 @@ class ItemDetails {
   final String? name;
   final int? id;
   final String? description;
-  final String? seller_name;
+  final String? store_name;
   final List<String>? images;
   final double? rating;
   final double? mrp;
@@ -19,7 +19,7 @@ class ItemDetails {
   ItemDetails({
     this.name,
     this.id,
-    this.seller_name,
+    this.store_name,
     this.description,
     this.images,
     this.rating,

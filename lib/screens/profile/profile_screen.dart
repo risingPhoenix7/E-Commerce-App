@@ -1,9 +1,9 @@
-import 'package:definitely_not_amazon/provider/model/user_details_model.dart';
 import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
+import 'package:definitely_not_amazon/screens/cart/orders_screen.dart';
+import 'package:definitely_not_amazon/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'changeDetailsViewModel.dart';
 import 'edit_general.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -30,71 +30,82 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 50),
             CustomContainerWidget(
-              screen: EditGeneral(intnumber:0,editgenerallist: [
-                EditGeneralInput(
-                    name: 'First Name',
-                    isCompulsory: true,
-                    givenString: "first_name",
-                    currentValue:
-                        UserDetailsViewModel.userDetailsModel?.first_name ??
-                            ""),
-                EditGeneralInput(
-                    name: 'Last Name',
-                    givenString: "last_name",
-                    isCompulsory: true,
-                    currentValue:
-                        UserDetailsViewModel.userDetailsModel?.last_name ?? ""),
-                EditGeneralInput(
-                    name: 'Age',
-                    givenString: "age",
-                    isCompulsory: false,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    currentValue:
-                        UserDetailsViewModel.userDetailsModel?.age ?? ""),
-              ], title: 'Edit Bio Data'),
+              screen: EditGeneral(
+                  intnumber: 0,
+                  editgenerallist: [
+                    EditGeneralInput(
+                        name: 'First Name',
+                        isCompulsory: true,
+                        givenString: "first_name",
+                        currentValue:
+                            UserDetailsViewModel.userDetailsModel?.first_name ??
+                                ""),
+                    EditGeneralInput(
+                        name: 'Last Name',
+                        givenString: "last_name",
+                        isCompulsory: true,
+                        currentValue:
+                            UserDetailsViewModel.userDetailsModel?.last_name ??
+                                ""),
+                    EditGeneralInput(
+                        name: 'Age',
+                        givenString: "age",
+                        isCompulsory: false,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        currentValue:
+                            UserDetailsViewModel.userDetailsModel?.age ?? ""),
+                  ],
+                  title: 'Edit Bio Data'),
               name: 'Edit Bio Data',
             ),
             CustomContainerWidget(
-              screen: EditGeneral(intnumber:1,editgenerallist: [
-                EditGeneralInput(
-                    name: 'Address 1',
-                    isCompulsory: false,
-                    givenString: "store_address1",
-                    currentValue:
-                        UserDetailsViewModel.userDetailsModel?.store_address1 ??
+              screen: EditGeneral(
+                  intnumber: 1,
+                  editgenerallist: [
+                    EditGeneralInput(
+                        name: 'Address 1',
+                        isCompulsory: false,
+                        givenString: "store_address1",
+                        currentValue: UserDetailsViewModel
+                                .userDetailsModel?.store_address1 ??
                             ""),
-                EditGeneralInput(
-                    name: 'Address 2',
-                    isCompulsory: false,
-                    givenString: "store_address2",
-                    currentValue:
-                        UserDetailsViewModel.userDetailsModel?.store_address2 ??
+                    EditGeneralInput(
+                        name: 'Address 2',
+                        isCompulsory: false,
+                        givenString: "store_address2",
+                        currentValue: UserDetailsViewModel
+                                .userDetailsModel?.store_address2 ??
                             ""),
-                EditGeneralInput(
-                    name: 'City',
-                    isCompulsory: false,
-                    givenString: "store_city",
-                    currentValue:
-                        UserDetailsViewModel.userDetailsModel?.store_city ??
+                    EditGeneralInput(
+                        name: 'City',
+                        isCompulsory: false,
+                        givenString: "store_city",
+                        currentValue:
+                            UserDetailsViewModel.userDetailsModel?.store_city ??
+                                ""),
+                    EditGeneralInput(
+                        name: 'Country',
+                        isCompulsory: false,
+                        givenString: "store_country",
+                        currentValue: UserDetailsViewModel
+                                .userDetailsModel?.store_country ??
                             ""),
-                EditGeneralInput(
-                    name: 'Country',
-                    isCompulsory: false,
-                    givenString: "store_country",
-                    currentValue:
-                        UserDetailsViewModel.userDetailsModel?.store_country ??
+                    EditGeneralInput(
+                        name: 'Pincode',
+                        givenString: "store_pincode",
+                        isCompulsory: false,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        currentValue: UserDetailsViewModel
+                                .userDetailsModel?.store_pincode ??
                             ""),
-                EditGeneralInput(
-                    name: 'Pincode',
-                    givenString: "store_pincode",
-                    isCompulsory: false,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    currentValue:
-                        UserDetailsViewModel.userDetailsModel?.store_pincode ??
-                            ""),
-              ], title: 'Edit Warehouse Address'),
+                  ],
+                  title: 'Edit Warehouse Address'),
               name: 'Edit Warehouse Address',
             ),
             CustomContainerWidget(
@@ -145,7 +156,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               name: 'Edit Delivery Address',
             ),
             CustomContainerWidget(
-              screen: const ProfileScreen(),
+              screen:
+                  CustomScaffold(body: const OrdersScreen(), title: "Profile"),
               name: 'View orders',
             ),
             const SizedBox(height: 50)

@@ -1,6 +1,9 @@
 import 'dart:math';
 
+import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
+import 'package:definitely_not_amazon/screens/cart/viewmodel/cart_viewmodel.dart';
 import 'package:definitely_not_amazon/screens/home/repository/model/item_details.dart';
+import 'package:definitely_not_amazon/screens/login/login_page.dart';
 import 'package:definitely_not_amazon/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -46,7 +49,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              itemDetails.seller_name?.toString() ?? "NA",
+                              itemDetails.store_name?.toString() ?? "NA",
                               style: TextStyle(
                                 fontSize: mobFontSize / 1.5,
                                 color: Colors.grey,
@@ -163,9 +166,32 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                             borderRadius:
                                                 BorderRadius.circular(10)),
                                         child: TextButton(
-                                          onPressed: () {
-                                            Navigator.pushNamed(
-                                                context, '/cart');
+                                          onPressed: () async {
+                                            if (UserDetailsViewModel
+                                                    .userDetailsModel ==
+                                                null) {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          LoginPage()));
+                                              return;
+                                            }
+                                            try {
+                                              await CartViewModel.addItemToCart(
+                                                  itemDetails.id!, quantity);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "Item added to cart")));
+                                              Navigator.pushNamed(
+                                                  context, '/cart');
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content:
+                                                          Text(e.toString())));
+                                            }
                                           },
                                           child: Text(
                                             "Add to cart",
@@ -221,7 +247,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Text(
-                                        itemDetails.seller_name?.toString() ??
+                                        itemDetails.store_name?.toString() ??
                                             "NA",
                                         style: TextStyle(
                                           color: Colors.grey,
@@ -299,32 +325,32 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                             MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "Ordering from ${itemDetails.seller_name?.toString() ?? "NA"}\n Haryana, 560054",
+                                            "Ordering from ${itemDetails.store_name?.toString() ?? "NA"}\n Haryana, 560054",
                                             style: TextStyle(
                                               fontSize: fontSize / 1.5,
                                             ),
                                           ),
 
-                                          SizedBox(
-                                            height: height * 0.05,
-                                          ),
-                                          Container(
-                                            height: height * 0.10,
-                                            width: double.infinity,
-                                            decoration: BoxDecoration(
-                                                color: Colors.orange,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            child: TextButton(
-                                              onPressed: () {},
-                                              child: Text(
-                                                "Order",
-                                                style: TextStyle(
-                                                    color: Colors.black,
-                                                    fontSize: fontSize / 1.55),
-                                              ),
-                                            ),
-                                          ),
+                                          // SizedBox(
+                                          //   height: height * 0.05,
+                                          // ),
+                                          // Container(
+                                          //   height: height * 0.10,
+                                          //   width: double.infinity,
+                                          //   decoration: BoxDecoration(
+                                          //       color: Colors.orange,
+                                          //       borderRadius:
+                                          //           BorderRadius.circular(10)),
+                                          //   child: TextButton(
+                                          //     onPressed: () {},
+                                          //     child: Text(
+                                          //       "Order",
+                                          //       style: TextStyle(
+                                          //           color: Colors.black,
+                                          //           fontSize: fontSize / 1.55),
+                                          //     ),
+                                          //   ),
+                                          // ),
                                           SizedBox(
                                             height: fontSize / 2,
                                           ),
@@ -337,6 +363,17 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                     BorderRadius.circular(10)),
                                             child: TextButton(
                                               onPressed: () {
+                                                if (UserDetailsViewModel
+                                                            .userDetailsModel ==
+                                                        null ||
+                                                    UserDetailsViewModel
+                                                            .userDetailsModel!
+                                                            .id ==
+                                                        null) {
+                                                  Navigator.pushNamed(
+                                                      context, '/login');
+                                                  return;
+                                                }
                                                 Navigator.pushNamed(
                                                     context, '/cart');
                                               },

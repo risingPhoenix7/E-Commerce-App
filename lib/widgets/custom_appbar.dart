@@ -101,13 +101,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
             const SizedBox(width: 8),
             GestureDetector(
               onTap: () {
+                print('Sign In');
                 Navigator.pushNamed(
                     context,
                     UserDetailsViewModel.userDetailsModel == null ||
-                            UserDetailsViewModel.userDetailsModel!.access ==
-                                null ||
-                            UserDetailsViewModel
-                                .userDetailsModel!.access!.isEmpty
+                            UserDetailsViewModel.userDetailsModel!.id == null
                         ? '/login'
                         : '/profile');
               },
@@ -125,6 +123,7 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 IconButton(
                   icon: const Icon(Icons.shopping_cart, color: Colors.white),
                   onPressed: () {
+                    Navigator.pushNamed(context, '/cart');
                     // Add your onPressed logic
                   },
                 ),

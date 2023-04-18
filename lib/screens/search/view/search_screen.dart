@@ -79,7 +79,7 @@ class ItemDetailsCard extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => EditItemDetailsScreen(
+                  builder: (context) => ItemDetailsView(
                         itemDetails: itemDetails2,
                       )));
         } catch (e) {

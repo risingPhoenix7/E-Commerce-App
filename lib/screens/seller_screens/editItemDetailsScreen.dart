@@ -77,7 +77,7 @@ class _EditItemDetailsScreenState extends State<EditItemDetailsScreen> {
                         text: 'Name',
                       ),
                       Text(
-                        itemDetails.seller_name?.toString() ?? "NA",
+                        itemDetails.store_name?.toString() ?? "NA",
                         style: TextStyle(
                           fontSize: mobFontSize / 1.5,
                           color: Colors.grey,
@@ -277,7 +277,7 @@ class _EditItemDetailsScreenState extends State<EditItemDetailsScreen> {
                                       fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  itemDetails.seller_name?.toString() ??
+                                  itemDetails.store_name?.toString() ??
                                       "NA",
                                   style: TextStyle(
                                     color: Colors.grey,

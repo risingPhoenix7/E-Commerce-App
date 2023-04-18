@@ -1,25 +1,25 @@
 import 'dart:math';
 
-import 'package:definitely_not_amazon/screens/seller_screens/model/sellerItemDetails.dart';
-import 'package:definitely_not_amazon/screens/seller_screens/viewmodel/uploadSellerDetails.dart';
 import 'package:definitely_not_amazon/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddItemPage2 extends StatefulWidget {
-  AddItemPage2({Key? key, required this.sellerItemDetails}) : super(key: key);
-  SellerItemDetails sellerItemDetails;
+class LeaveReviewScreen extends StatefulWidget {
+  LeaveReviewScreen({Key? key}) : super(key: key);
 
   @override
-  State<AddItemPage2> createState() => _AddItemPage2State();
+  State<LeaveReviewScreen> createState() => _LeaveReviewScreenState();
 }
 
-class _AddItemPage2State extends State<AddItemPage2> {
+class _LeaveReviewScreenState extends State<LeaveReviewScreen> {
   TextEditingController detailsController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
   List<XFile> images = [];
+  double rating = 5;
 
   Future<void> pickImages() async {
     List<XFile>? resultList = [];
@@ -87,15 +87,45 @@ class _AddItemPage2State extends State<AddItemPage2> {
                             child: Padding(
                               padding: EdgeInsets.only(
                                   top: 8.0, left: 8, bottom: 10),
-                              child: Text('Enter item details',
+                              child: Text('Enter review details',
                                   style: TextStyle(fontSize: 25)),
                             ),
                           ),
                           const SizedBox(height: 20),
                           CustomTextField(
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(50),
+                            ],
                             controller: detailsController,
-                            text: 'Item Details',
+                            text: 'Short Title',
                           ),
+                          CustomTextField(
+                            inputFormatters: [
+                              LengthLimitingTextInputFormatter(50),
+                            ],
+                            controller: detailsController,
+                            text: 'Describe your experience',
+                          ),
+                          Center(
+                            child: RatingBar.builder(
+                                initialRating: rating,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemPadding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                itemBuilder: (context, _) => const Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+                                    ),
+                                onRatingUpdate: (rating) {
+                                  setState(() {
+                                    this.rating = rating;
+                                  });
+                                }),
+                          ),
+                          const SizedBox(height: 20),
                           Center(
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -132,17 +162,17 @@ class _AddItemPage2State extends State<AddItemPage2> {
                                   return;
                                 } else {
                                   try {
-                                    widget.sellerItemDetails.description =
-                                        detailsController.text;
-
-                                    String output = SellerScreensViewModel
-                                        .uploadSellerDetails(
-                                            widget.sellerItemDetails, images);
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(output),
-                                      ),
-                                    );
+                                    // widget.sellerItemDetails.description =
+                                    //     detailsController.text;
+                                    //
+                                    // String output = SellerScreensViewModel
+                                    //     .uploadSellerDetails(
+                                    //         widget.sellerItemDetails, images);
+                                    // ScaffoldMessenger.of(context).showSnackBar(
+                                    //   SnackBar(
+                                    //     content: Text(output),
+                                    //   ),
+                                    // );
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(

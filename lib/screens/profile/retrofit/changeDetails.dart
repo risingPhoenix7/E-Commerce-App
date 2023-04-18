@@ -13,18 +13,18 @@ abstract class ChangeDetailsRestClient {
 
   @PATCH(Urls.kUpdateUserPath)
   Future<void> changeUserDetails(@Body() Map<String, dynamic> userDetailsModel,
-      @Header("Authorization") String access);
+      @Header("User-ID") String access);
 
   @PATCH(Urls.kUpdateCustomerPath)
   Future<void> changeCustomerDetails(
       @Body() Map<String, dynamic> userDetailsModel,
-      @Header("Authorization") String access);
+      @Header("User-ID") String access);
 
   @PATCH(Urls.kUpdateSellerPath)
   Future<void> changeSellerDetails(
       @Body() Map<String, dynamic> userDetailsModel,
-      @Header("Authorization") String access);
+      @Header("User-ID") String access);
 
   @GET(Urls.kUpdateProfilePath)
-  Future<UserDetailsModel> updateProfile(@Header("Authorization") String access);
+  Future<UserDetailsModel> updateProfile(@Header("User-ID") String access);
 }
