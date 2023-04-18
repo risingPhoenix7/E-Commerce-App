@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
+import 'package:definitely_not_amazon/screens/cart/viewmodel/cart_viewmodel.dart';
 import 'package:definitely_not_amazon/screens/home/repository/model/item_details.dart';
-import 'package:definitely_not_amazon/utils/urls.dart';
+import 'package:definitely_not_amazon/screens/login/login_page.dart';
 import 'package:definitely_not_amazon/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -17,9 +19,13 @@ class ItemDetailsView extends StatefulWidget {
 }
 
 class _ItemDetailsViewState extends State<ItemDetailsView> {
+  int quantity = 1;
+
   @override
   Widget build(BuildContext context) {
-    var fontSize = MediaQuery.of(context).size.width * 0.02;
+    ItemDetails itemDetails = widget.itemDetails;
+    var fontSize = MediaQuery.of(context).size.width * 0.015;
+    var mobFontSize = MediaQuery.of(context).size.height * 0.03;
     var deviceType = getDeviceType(MediaQuery.of(context).size);
     return CustomScaffold(
       body: SingleChildScrollView(
@@ -27,7 +33,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
           child: deviceType == DeviceScreenType.mobile
               ? Column(
                   children: [
-                    ImageSlider(imageUrls: widget.itemDetails.images!),
+                    ImageSlider(imageUrls: itemDetails.images!),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: SizedBox(
@@ -37,42 +43,44 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.itemDetails.name!,
+                              itemDetails.name!,
                               style: TextStyle(
-                                  fontSize: fontSize * 1.5,
+                                  fontSize: mobFontSize * 1.5,
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              widget.itemDetails.seller_name?.toString() ??
-                                  "NA",
+                              itemDetails.store_name?.toString() ?? "NA",
                               style: TextStyle(
-                                fontSize: fontSize,
+                                fontSize: mobFontSize / 1.5,
+                                color: Colors.grey,
                               ),
                             ),
                             Text(
-                              "₹${widget.itemDetails.price!.toString()}",
+                              "₹${itemDetails.price!.toString()}",
                               style: TextStyle(
                                   color: Colors.orange,
-                                  fontSize: fontSize * 1.5,
+                                  fontSize: mobFontSize * 1.5,
                                   fontWeight: FontWeight.bold),
                             ),
                             Row(
                               children: [
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: fontSize / 2, right: fontSize / 2),
-                                  child: Text(
-                                      widget.itemDetails.rating.toString(),
-                                      style: TextStyle(fontSize: fontSize)),
+                                      top: mobFontSize / 2,
+                                      right: mobFontSize / 2),
+                                  child: Text(itemDetails.rating.toString(),
+                                      style: TextStyle(
+                                          fontSize: mobFontSize / 1.2)),
                                 ),
                                 RatingBarIndicator(
-                                  rating: widget.itemDetails.rating ?? 0.0,
-                                  itemBuilder: (context, index) => const Icon(
+                                  rating: itemDetails.rating ?? 0.0,
+                                  itemBuilder: (context, index) => Icon(
                                     Icons.star,
+                                    size: mobFontSize / 2,
                                     color: Colors.amber,
                                   ),
                                   itemCount: 5,
-                                  itemSize: fontSize * 2,
+                                  itemSize: mobFontSize / 2,
                                   unratedColor: Colors.amber.withAlpha(50),
                                   direction: Axis.horizontal,
                                 ),
@@ -81,101 +89,430 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                             SizedBox(
                               height: fontSize,
                             ),
-                            Text(
-                              widget.itemDetails.description!,
-                              maxLines: 10,
-                              style: TextStyle(
-                                fontSize: fontSize,
+                            ShowMoreText(
+                              maxLines: 4,
+                              text: itemDetails.description!,
+                            ),
+
+                            // UserDetailsViewModel.userDetailsModel == null
+                            //     ? Container()
+                            //     :
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                children: [
+                                  //location icon
+                                  const Icon(
+                                    Icons.location_on,
+                                    color: Colors.orange,
+                                    size: 20,
+                                  ),
+                                  Text(
+                                    "Deliver to Bangalore, 560072",
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    // (UserDetailsViewModel
+                                    //                 .userDetailsModel!
+                                    //                 .delivery_address2 !=
+                                    //             null &&
+                                    //         UserDetailsViewModel
+                                    //             .userDetailsModel!
+                                    //             .delivery_address2!
+                                    //             .isNotEmpty)
+                                    //     ? "Deliver to ${UserDetailsViewModel.userDetailsModel!.delivery_address2}"
+                                    //     : "Add delivery details in your profile",
+                                    style: TextStyle(
+                                        fontSize: mobFontSize / 1.55,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
                               ),
                             ),
+                            SizedBox(
+                              height: mobFontSize,
+                            ),
+                            Container(
+                              width: MediaQuery.of(context).size.width,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        height: mobFontSize * 2,
+                                        decoration: BoxDecoration(
+                                            color: Colors.orange,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: TextButton(
+                                          onPressed: () {},
+                                          child: Text(
+                                            "Order",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: mobFontSize),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: mobFontSize,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        height: mobFontSize * 2,
+                                        decoration: BoxDecoration(
+                                            color: Colors.yellow,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: TextButton(
+                                          onPressed: () async {
+                                            if (UserDetailsViewModel
+                                                    .userDetailsModel ==
+                                                null) {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          LoginPage()));
+                                              return;
+                                            }
+                                            try {
+                                              await CartViewModel.addItemToCart(
+                                                  itemDetails.id!, quantity);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "Item added to cart")));
+                                              Navigator.pushNamed(
+                                                  context, '/cart');
+                                            } catch (e) {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content:
+                                                          Text(e.toString())));
+                                            }
+                                          },
+                                          child: Text(
+                                            "Add to cart",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: mobFontSize),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
                     ),
-                    ReviewsWidget(reviews: widget.itemDetails.reviews ?? [])
+                    ReviewsWidget(reviews: itemDetails.reviews ?? [])
                   ],
                 )
               : Column(
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          height: MediaQuery.of(context).size.height * 0.8,
-                          child: PhotoViewer(
-                            imageUrls: widget.itemDetails.images,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.45,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.itemDetails.name!,
-                                  style: TextStyle(
-                                      fontSize: fontSize * 1.5,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  widget.itemDetails.seller_name?.toString() ??
-                                      "NA",
-                                  style: TextStyle(
-                                    fontSize: fontSize,
-                                  ),
-                                ),
-                                Text(
-                                  "₹${widget.itemDetails.price!.toString()}",
-                                  style: TextStyle(
-                                      color: Colors.orange,
-                                      fontSize: fontSize * 1.5,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Row(
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(
-                                          top: fontSize / 2,
-                                          right: fontSize / 2),
-                                      child: Text(
-                                          widget.itemDetails.rating.toString(),
-                                          style: TextStyle(fontSize: fontSize)),
-                                    ),
-                                    RatingBarIndicator(
-                                      rating: widget.itemDetails.rating ?? 0.0,
-                                      itemBuilder: (context, index) =>
-                                          const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      itemCount: 5,
-                                      itemSize: fontSize * 2,
-                                      unratedColor: Colors.amber.withAlpha(50),
-                                      direction: Axis.horizontal,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: fontSize,
-                                ),
-                                Text(
-                                  widget.itemDetails.description!,
-                                  maxLines: 10,
-                                  style: TextStyle(
-                                    fontSize: fontSize,
-                                  ),
-                                ),
-                              ],
+                    Container(
+                      height: min(MediaQuery.of(context).size.height * 0.5,
+                          MediaQuery.of(context).size.width * 0.3),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: Container(
+                              child: PhotoViewer(
+                                imageUrls: itemDetails.images,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Expanded(
+                            flex: 2,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SingleChildScrollView(
+                                child: Container(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        itemDetails.name!,
+                                        style: TextStyle(
+                                            fontSize: fontSize * 1.5,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        itemDetails.store_name?.toString() ??
+                                            "NA",
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: fontSize / 1.5,
+                                        ),
+                                      ),
+                                      Text(
+                                        "₹${itemDetails.price!.toString()}",
+                                        style: TextStyle(
+                                            color: Colors.orange,
+                                            fontSize: fontSize * 1.5,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: fontSize / 2,
+                                                right: fontSize / 2),
+                                            child: Text(
+                                                itemDetails.rating.toString(),
+                                                style: TextStyle(
+                                                    fontSize: fontSize)),
+                                          ),
+                                          RatingBarIndicator(
+                                            rating: itemDetails.rating ?? 0.0,
+                                            itemBuilder: (context, index) =>
+                                                const Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            itemCount: 5,
+                                            itemSize: fontSize * 2,
+                                            unratedColor:
+                                                Colors.amber.withAlpha(50),
+                                            direction: Axis.horizontal,
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: fontSize,
+                                      ),
+                                      Text(
+                                        itemDetails.description!,
+                                        maxLines: 10,
+                                        style: TextStyle(
+                                          fontSize: fontSize,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.grey),
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: LayoutBuilder(builder:
+                                      (BuildContext context,
+                                          BoxConstraints constraints) {
+                                    // Calculate the font size based on the screen width
+                                    double height = constraints.maxHeight;
+                                    double width = constraints.maxWidth;
+                                    return Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: width * 0.1),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "Ordering from ${itemDetails.store_name?.toString() ?? "NA"}\n Haryana, 560054",
+                                            style: TextStyle(
+                                              fontSize: fontSize / 1.5,
+                                            ),
+                                          ),
+
+                                          // SizedBox(
+                                          //   height: height * 0.05,
+                                          // ),
+                                          // Container(
+                                          //   height: height * 0.10,
+                                          //   width: double.infinity,
+                                          //   decoration: BoxDecoration(
+                                          //       color: Colors.orange,
+                                          //       borderRadius:
+                                          //           BorderRadius.circular(10)),
+                                          //   child: TextButton(
+                                          //     onPressed: () {},
+                                          //     child: Text(
+                                          //       "Order",
+                                          //       style: TextStyle(
+                                          //           color: Colors.black,
+                                          //           fontSize: fontSize / 1.55),
+                                          //     ),
+                                          //   ),
+                                          // ),
+                                          SizedBox(
+                                            height: fontSize / 2,
+                                          ),
+                                          Container(
+                                            width: double.infinity,
+                                            height: height * 0.10,
+                                            decoration: BoxDecoration(
+                                                color: Colors.yellow,
+                                                borderRadius:
+                                                    BorderRadius.circular(10)),
+                                            child: TextButton(
+                                              onPressed: () {
+                                                if (UserDetailsViewModel
+                                                            .userDetailsModel ==
+                                                        null ||
+                                                    UserDetailsViewModel
+                                                            .userDetailsModel!
+                                                            .id ==
+                                                        null) {
+                                                  Navigator.pushNamed(
+                                                      context, '/login');
+                                                  return;
+                                                }
+                                                Navigator.pushNamed(
+                                                    context, '/cart');
+                                              },
+                                              child: Text(
+                                                "Add to cart",
+                                                style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: fontSize / 1.55),
+                                              ),
+                                            ),
+                                          ),
+                                          // quantity button add and subtract, minimum 0
+                                          SizedBox(
+                                            height: fontSize / 2,
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                height: height * 0.10,
+                                                width: width * 0.10,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      if (quantity > 0) {
+                                                        quantity--;
+                                                      }
+                                                    });
+                                                  },
+                                                  child: Text(
+                                                    "-",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: fontSize / 1),
+                                                  ),
+                                                ),
+                                              ),
+                                              //a quantity textfield here
+                                              Container(
+                                                width: width * 0.10,
+                                                height: height * 0.10,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: Center(
+                                                  child: Text(
+                                                    quantity.toString(),
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+
+                                              Container(
+                                                height: height * 0.10,
+                                                width: width * 0.10,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.transparent,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      quantity++;
+                                                    });
+                                                  },
+                                                  child: Text(
+                                                    "+",
+                                                    style: TextStyle(
+                                                        color: Colors.black,
+                                                        fontSize: fontSize / 1),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          SizedBox(
+                                            height: fontSize / 2,
+                                          ),
+                                          Row(
+                                            children: [
+                                              //location icon
+                                              Icon(
+                                                Icons.location_on,
+                                                color: Colors.orange,
+                                                size: fontSize / 1.55,
+                                              ),
+                                              Text(
+                                                "Deliver to Bangalore, 560072",
+                                                maxLines: 3,
+                                                overflow: TextOverflow.ellipsis,
+                                                // (UserDetailsViewModel
+                                                //                 .userDetailsModel!
+                                                //                 .delivery_address2 !=
+                                                //             null &&
+                                                //         UserDetailsViewModel
+                                                //             .userDetailsModel!
+                                                //             .delivery_address2!
+                                                //             .isNotEmpty)
+                                                //     ? "Deliver to ${UserDetailsViewModel.userDetailsModel!.delivery_address2}"
+                                                //     : "Add delivery details in your profile",
+                                                style: TextStyle(
+                                                    fontSize: fontSize / 1.55,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: height * 0.05,
+                                          ),
+                                          Text(
+                                            "Subtotal : ₹${(itemDetails.price! * quantity).toString()}",
+                                            style: TextStyle(
+                                                color: Colors.orange,
+                                                fontSize: fontSize,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ))
+                        ],
+                      ),
                     ),
-                    ReviewsWidget(reviews: widget.itemDetails.reviews ?? [])
+                    ReviewsWidget(reviews: itemDetails.reviews ?? [])
                   ],
                 )),
     );
@@ -225,7 +562,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
                             });
                           },
                           child: Image.network(
-                            "${Urls.kBaseUrl}${widget.imageUrls![index]}",
+                            "${widget.imageUrls![index]}",
                           ),
                         ),
                       ),
@@ -238,7 +575,7 @@ class _PhotoViewerState extends State<PhotoViewer> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.network(
-                  "${Urls.kBaseUrl}${widget.imageUrls![selectedImageIndex]}",
+                  "${widget.imageUrls![selectedImageIndex]}",
                   fit: BoxFit.contain,
                 ),
               ),
@@ -289,7 +626,7 @@ class _ImageSliderState extends State<ImageSlider> {
         controller: _pageController,
         itemBuilder: (BuildContext context, int index) {
           return Image.network(
-            "${Urls.kBaseUrl}${widget.imageUrls[index]}",
+            "${widget.imageUrls[index]}",
             fit: BoxFit.contain,
             width: double.infinity,
             height: double.infinity,
@@ -356,18 +693,23 @@ class ReviewsWidget extends StatelessWidget {
     return Align(
         alignment: Alignment.topLeft,
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               Align(
                 alignment: Alignment.topLeft,
-                child: Text("Ratings",
+                child: Text("Reviews",
                     style: TextStyle(
-                        fontSize: MediaQuery.of(context).size.width * 1 / 30,
+                        fontSize: MediaQuery.of(context).size.width * 1 / 35,
                         fontWeight: FontWeight.bold)),
               ),
               reviews.isEmpty
-                  ? Text("No reviews")
+                  ? const Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 10.0),
+                        child: Text("No reviews"),
+                      ))
                   : Column(
                       children: List.generate(
                           reviews.length ?? 0,
@@ -507,5 +849,60 @@ class ReviewsWidget extends StatelessWidget {
             ],
           ),
         ));
+  }
+}
+
+class ShowMoreText extends StatefulWidget {
+  final String text;
+  final int maxLines;
+
+  ShowMoreText({required this.text, required this.maxLines});
+
+  @override
+  _ShowMoreTextState createState() => _ShowMoreTextState();
+}
+
+class _ShowMoreTextState extends State<ShowMoreText> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final TextPainter textPainter = TextPainter(
+          text: TextSpan(
+            text: widget.text,
+            style: DefaultTextStyle.of(context).style,
+          ),
+          maxLines: widget.maxLines,
+          textDirection: TextDirection.ltr,
+        )..layout(maxWidth: constraints.maxWidth);
+
+        final bool isTextOverflowing = textPainter.didExceedMaxLines;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.text,
+              maxLines: _isExpanded ? null : widget.maxLines,
+              overflow: TextOverflow.clip,
+            ),
+            if (isTextOverflowing)
+              GestureDetector(
+                onTap: () {
+                  setState(() {
+                    _isExpanded = !_isExpanded;
+                  });
+                },
+                child: Text(
+                  _isExpanded ? "Show Less" : "Show More",
+                  style: TextStyle(color: Colors.blue),
+                ),
+              ),
+          ],
+        );
+      },
+    );
   }
 }

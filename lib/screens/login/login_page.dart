@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
+import 'package:definitely_not_amazon/screens/home/home_screen.dart';
 import 'package:definitely_not_amazon/widgets/custom_textfield.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
@@ -33,8 +34,12 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.pushNamedAndRemoveUntil(
-                        context, '/home', ModalRoute.withName('/'));
+                    print('Logo tapped');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomeScreen(),
+                      ));
                   },
                   child: Image.asset(
                     'assets/images/logo_white.png',

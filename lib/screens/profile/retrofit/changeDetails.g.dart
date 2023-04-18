@@ -27,7 +27,7 @@ class _ChangeDetailsRestClient implements ChangeDetailsRestClient {
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': access};
+    final _headers = <String, dynamic>{r'User-ID': access};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(userDetailsModel);
@@ -52,7 +52,7 @@ class _ChangeDetailsRestClient implements ChangeDetailsRestClient {
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': access};
+    final _headers = <String, dynamic>{r'User-ID': access};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(userDetailsModel);
@@ -77,7 +77,7 @@ class _ChangeDetailsRestClient implements ChangeDetailsRestClient {
   ) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': access};
+    final _headers = <String, dynamic>{r'User-ID': access};
     _headers.removeWhere((k, v) => v == null);
     final _data = <String, dynamic>{};
     _data.addAll(userDetailsModel);
@@ -99,7 +99,7 @@ class _ChangeDetailsRestClient implements ChangeDetailsRestClient {
   Future<UserDetailsModel> updateProfile(access) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'Authorization': access};
+    final _headers = <String, dynamic>{r'User-ID': access};
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio

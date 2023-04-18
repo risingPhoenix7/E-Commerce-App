@@ -9,7 +9,7 @@ part of 'item_details.dart';
 ItemDetails _$ItemDetailsFromJson(Map<String, dynamic> json) => ItemDetails(
       name: json['name'] as String?,
       id: json['id'] as int?,
-      seller_name: json['seller_name'] as String?,
+      store_name: json['store_name'] as String?,
       description: json['description'] as String?,
       images:
           (json['images'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -17,7 +17,10 @@ ItemDetails _$ItemDetailsFromJson(Map<String, dynamic> json) => ItemDetails(
       reviews: (json['reviews'] as List<dynamic>?)
           ?.map((e) => ReviewDetails.fromJson(e as Map<String, dynamic>))
           .toList(),
+      mrp: (json['mrp'] as num?)?.toDouble(),
       price: json['price'] as int?,
+      discount: (json['discount'] as num?)?.toDouble(),
+      quantity: json['quantity'] as int?,
     );
 
 Map<String, dynamic> _$ItemDetailsToJson(ItemDetails instance) =>
@@ -25,11 +28,14 @@ Map<String, dynamic> _$ItemDetailsToJson(ItemDetails instance) =>
       'name': instance.name,
       'id': instance.id,
       'description': instance.description,
-      'seller_name': instance.seller_name,
+      'store_name': instance.store_name,
       'images': instance.images,
       'rating': instance.rating,
+      'mrp': instance.mrp,
       'reviews': instance.reviews,
       'price': instance.price,
+      'discount': instance.discount,
+      'quantity': instance.quantity,
     };
 
 ReviewDetails _$ReviewDetailsFromJson(Map<String, dynamic> json) =>

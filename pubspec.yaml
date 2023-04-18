@@ -47,6 +47,7 @@ dependencies:
   email_validator: ^2.1.17
   flutter_rating_bar: ^4.0.1
   page_view_indicators: ^2.0.0
+  image_picker: ^0.8.7+3
 
 dev_dependencies:
   flutter_test:

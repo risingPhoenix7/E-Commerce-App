@@ -7,21 +7,27 @@ class ItemDetails {
   final String? name;
   final int? id;
   final String? description;
-  final String? seller_name;
+  final String? store_name;
   final List<String>? images;
   final double? rating;
+  final double? mrp;
   final List<ReviewDetails>? reviews;
   final int? price;
+  final double? discount;
+  final int? quantity;
 
   ItemDetails({
     this.name,
     this.id,
-    this.seller_name,
+    this.store_name,
     this.description,
     this.images,
     this.rating,
     this.reviews,
+    this.mrp,
     this.price,
+    this.discount,
+    this.quantity,
   });
 
   factory ItemDetails.fromJson(Map<String, dynamic> json) =>
@@ -51,4 +57,3 @@ class ReviewDetails {
 
   Map<String, dynamic> toJson() => _$ReviewDetailsToJson(this);
 }
-

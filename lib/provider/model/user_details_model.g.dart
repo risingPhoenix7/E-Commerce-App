@@ -26,7 +26,7 @@ UserDetailsModel _$UserDetailsModelFromJson(Map<String, dynamic> json) =>
       age: json['age'] as int?,
       id: json['id'] as int?,
       cart_count: json['cart_count'] as int?,
-      access: json['access'] as String?,
+      store_name: json['store_name'] as String?,
     );
 
 Map<String, dynamic> _$UserDetailsModelToJson(UserDetailsModel instance) =>
@@ -49,7 +49,7 @@ Map<String, dynamic> _$UserDetailsModelToJson(UserDetailsModel instance) =>
       'age': instance.age,
       'id': instance.id,
       'cart_count': instance.cart_count,
-      'access': instance.access,
+      'store_name': instance.store_name,
     };
 
 LoginPostRequestModel _$LoginPostRequestModelFromJson(

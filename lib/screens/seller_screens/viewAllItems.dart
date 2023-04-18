@@ -2,69 +2,80 @@ import 'package:definitely_not_amazon/screens/home/repository/model/item_details
 import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_details.dart';
 import 'package:definitely_not_amazon/screens/home/viewmodel/home_view_model.dart';
 import 'package:definitely_not_amazon/screens/item/item_details.dart';
-import 'package:definitely_not_amazon/screens/seller_screens/editItemDetailsScreen.dart';
+import 'package:definitely_not_amazon/screens/seller_screens/viewmodel/uploadSellerDetails.dart';
 import 'package:definitely_not_amazon/widgets/custom_appbar.dart';
+import 'package:definitely_not_amazon/widgets/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-class SearchScreen extends StatefulWidget {
-  SearchScreen({Key? key, required this.items, required this.searchText})
-      : super(key: key);
-  String? searchText;
-
-  List<MiniItemDetails>? items;
+class SellerViewItemsScreen extends StatefulWidget {
+  SellerViewItemsScreen({Key? key}) : super(key: key);
 
   @override
-  State<SearchScreen> createState() => _SearchScreenState();
+  State<SellerViewItemsScreen> createState() => _SellerViewItemsScreenState();
 }
 
-class _SearchScreenState extends State<SearchScreen> {
+class _SellerViewItemsScreenState extends State<SellerViewItemsScreen> {
+  bool isLoading = true;
+  List<MiniItemDetails> items = [];
+
+  // getSellerItems() async {
+  //   try {
+  //     items = await SellerScreensViewModel.getSellerItems();
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(SnackBar(content: Text(e.toString())));
+  //   }
+  //   setState(() {
+  //     isLoading = false;
+  //   });
+  // }
+
+  @override
+  void initState() {
+    // getSellerItems();
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var items = widget.items;
-    var searchText = widget.searchText;
     var deviceType = getDeviceType(MediaQuery.of(context).size);
 
     return CustomScaffold(
-        title: "Search",
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
+        title: "Your items",
+        body: isLoading
+            ? Loader()
+            : Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text("Showing results for "),
-                  Text(
-                    searchText!,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  )
+                  items.isEmpty
+                      ? const Expanded(
+                          child: Center(child: Text("No items selling/sold")))
+                      : Expanded(
+                          child: GridView.builder(
+                            itemCount: items.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                    crossAxisCount:
+                                        deviceType == DeviceScreenType.mobile
+                                            ? 2
+                                            : 4),
+                            itemBuilder: (BuildContext context, int index) {
+                              return SellerItemDetailsCard(
+                                  itemDetails: items[index]);
+                            },
+                          ),
+                        )
                 ],
-              ),
-            ),
-            const SizedBox(height: 10),
-            items == null || items.isEmpty
-                ? Expanded(child: Center(child: const Text("No results found")))
-                : Expanded(
-                    child: GridView.builder(
-                      itemCount: items.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount:
-                              deviceType == DeviceScreenType.mobile ? 2 : 4),
-                      itemBuilder: (BuildContext context, int index) {
-                        return ItemDetailsCard(itemDetails: items[index]);
-                      },
-                    ),
-                  )
-          ],
-        ));
+              ));
   }
 }
 
-class ItemDetailsCard extends StatelessWidget {
-  const ItemDetailsCard({Key? key, required this.itemDetails})
+class SellerItemDetailsCard extends StatelessWidget {
+  const SellerItemDetailsCard({Key? key, required this.itemDetails})
       : super(key: key);
   final MiniItemDetails itemDetails;
 

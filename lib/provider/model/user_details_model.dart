@@ -22,7 +22,7 @@ class UserDetailsModel {
   int? age;
   int? id;
   int? cart_count;
-  String? access;
+  String? store_name;
 
   UserDetailsModel({
     this.first_name,
@@ -43,7 +43,7 @@ class UserDetailsModel {
     this.age,
     this.id,
     this.cart_count,
-    this.access,
+    this.store_name,
   });
 
   factory UserDetailsModel.fromJson(Map<String, dynamic> json) =>

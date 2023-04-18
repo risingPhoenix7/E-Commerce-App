@@ -9,7 +9,10 @@ class CustomTextField extends StatelessWidget {
         this.removespacing = false,
         this.inputFormatters,
         this.keyboardType,
+        this.heading,
+        this.maxLines,
         this.validator,
+        this.style,
         this.autofillHints})
       : super(key: key);
 
@@ -20,6 +23,9 @@ class CustomTextField extends StatelessWidget {
   final Iterable<String>? autofillHints;
   final FormFieldValidator<String>? validator;
   final bool removespacing;
+  final String? heading;
+  final TextStyle? style;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +35,12 @@ class CustomTextField extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 5),
           child: Text(
-            text,
+            heading??text,
             style: const TextStyle(color: Colors.black),
           ),
         ),
         TextFormField(
+          maxLines: maxLines,
           inputFormatters: inputFormatters,
           keyboardType: keyboardType,
           controller: controller,
@@ -57,7 +64,7 @@ class CustomTextField extends StatelessWidget {
               borderSide: BorderSide(color: Colors.black),
             ),
           ),
-          style: const TextStyle(color: Colors.black),
+          style: style??const TextStyle(color: Colors.black),
         ),
         removespacing ? Container() : SizedBox(height: 10),
       ],
