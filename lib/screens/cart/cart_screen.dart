@@ -288,7 +288,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                     SizedBox(
                       height: height * 0.02,
                     ),
-                    Text(widget.cartItem.store_name ?? "NA",
+                    Text("Store name",
                         style: TextStyle(
                             fontSize: fontSize * 1.2, color: Colors.grey)),
                     SizedBox(

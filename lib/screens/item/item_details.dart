@@ -178,6 +178,27 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                               return;
                                             }
                                             try {
+                                              print("HIU");
+                                              print(
+                                                  "UserDetailsViewModel.userDetailsModel!.delivery_address2 ${UserDetailsViewModel.userDetailsModel!.delivery_address2}");
+                                              if (UserDetailsViewModel.userDetailsModel!.delivery_address2 == null ||
+                                                  UserDetailsViewModel
+                                                          .userDetailsModel!
+                                                          .delivery_address1 ==
+                                                      null ||
+                                                  UserDetailsViewModel
+                                                      .userDetailsModel!
+                                                      .delivery_address2!
+                                                      .isEmpty ||
+                                                  UserDetailsViewModel
+                                                      .userDetailsModel!
+                                                      .delivery_address1!
+                                                      .isEmpty) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        content: Text(
+                                                            "Please add delivery address in your profile")));
+                                              }
                                               await CartViewModel.addItemToCart(
                                                   itemDetails.id!, quantity);
                                               ScaffoldMessenger.of(context)

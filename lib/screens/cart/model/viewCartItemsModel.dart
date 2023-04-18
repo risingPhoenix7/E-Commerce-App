@@ -7,7 +7,6 @@ class CartItem {
   String? name;
   String? image;
   int? quantity;
-  String? store_name;
   String? description;
   int? item_id;
   double? price;
@@ -17,7 +16,6 @@ class CartItem {
     this.quantity,
     this.image,
     this.description,
-    this.store_name,
     this.item_id,
     this.price,
   });

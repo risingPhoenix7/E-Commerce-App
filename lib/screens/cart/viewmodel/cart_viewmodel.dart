@@ -23,7 +23,10 @@ class CartViewModel {
       }
       return it;
     }).catchError((Object obj) {
+      print('pkoa');
       print(obj.toString());
+      print('ewefpkoa');
+
       throw Exception("Error in getting cart Items");
     });
     return cartItems;
