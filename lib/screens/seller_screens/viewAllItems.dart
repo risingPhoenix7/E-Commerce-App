@@ -74,7 +74,10 @@ class _SellerViewItemsScreenState extends State<SellerViewItemsScreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => ProfileScreen()));
+                                  builder: (context) => CustomScaffold(
+                                      body: const ProfileScreen(),
+                                      title: "Profile"),
+                                ));
                           } else {
                             Navigator.push(
                                 context,
