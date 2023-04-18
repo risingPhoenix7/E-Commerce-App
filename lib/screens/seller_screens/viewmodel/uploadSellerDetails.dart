@@ -57,8 +57,11 @@ class SellerScreensViewModel {
         .getSellerItems(UserDetailsViewModel.userDetailsModel!.id.toString())
         .then((it) {
       for (int i = 0; i < it.length; i++) {
+        if (it[i].images == null) {
+          continue;
+        }
         for (int j = 0; j < it[i].images!.length; j++) {
-          it[i].images![j] = Urls.kBaseUrl + it[i].images![j];
+          it[i].images![j] = Urls.kImageAppendUrl + it[i].images![j];
         }
       }
       return it;
