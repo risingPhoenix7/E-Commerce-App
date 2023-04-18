@@ -14,12 +14,8 @@ class SellerScreensViewModel {
     required List<XFile> images,
   }) async {
     final url = Uri.parse(
-        "${Urls.kBaseUrl}${Urls.kPostItemDetailsPath}?userId=${UserDetailsViewModel.userDetailsModel?.id ?? 1}");
-    var headers = {'User-ID': '${UserDetailsViewModel.userDetailsModel!.id!}'};
-    var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'https://ujjwalaggarwal.pythonanywhere.com/market/create-item/?userId=25'));
+        "${Urls.kBaseUrl}${Urls.kAddItemsPath}?userId=${UserDetailsViewModel.userDetailsModel?.id ?? 1}");
+    var request = http.MultipartRequest('POST', url);
     request.fields.addAll({
       'name': '${sellerItemDetails.name}',
       'mrp': '${sellerItemDetails.mrp}',
@@ -39,13 +35,12 @@ class SellerScreensViewModel {
         ),
       );
     }
-    request.headers.addAll(headers);
 
     http.StreamedResponse response = await request.send();
-
     if (response.statusCode == 200) {
       print(await response.stream.bytesToString());
     } else {
+      print('wrgkjrgk');
       print(response.reasonPhrase);
     }
   }

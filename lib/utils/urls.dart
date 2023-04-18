@@ -16,7 +16,7 @@ class Urls {
   static const kUpdateSellerPath = "/users/update-seller/";
   static const kUpdateProfilePath = "/users/profile/";
   static const kgetFullItemDetailsPath = "/market/item/";
-  static const kPostItemDetailsPath = "/market/item/";
+  static const kAddItemsPath = "/market/create-item/";
   static const kGetCartPath = "/users/view-cart/";
   static const kAddToCartPath = "/users/update-cart/";
   static const kPlaceOrderPath = "/users/place-order/";
@@ -24,6 +24,6 @@ class Urls {
   static const kgetOrderDetailsPath = "/users/past-order-detail/";
   static const kVerifyCouponCodePath = "/market/verify-coupon/";
   //TODO: Add the rest of the paths
-  static const kgetSellerItems = "/market/verify-coupon/";
-  static const keditSellerItems = "/market/verify-coupon/";
+  static const kgetSellerItems = "/market/get-seller-items/";
+  static const keditSellerItems = "/market/update-item/";
 }

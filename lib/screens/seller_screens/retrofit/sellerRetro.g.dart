@@ -34,7 +34,7 @@ class _SellerRestClient implements SellerRestClient {
     )
             .compose(
               _dio.options,
-              '/market/verify-coupon/',
+              '/market/get-seller-items/',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -62,7 +62,7 @@ class _SellerRestClient implements SellerRestClient {
     )
         .compose(
           _dio.options,
-          '/market/verify-coupon/',
+          '/market/update-item/',
           queryParameters: queryParameters,
           data: _data,
         )

@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:definitely_not_amazon/screens/home/repository/model/category.dart';
+import 'package:definitely_not_amazon/screens/home/viewmodel/home_view_model.dart';
 import 'package:definitely_not_amazon/screens/seller_screens/model/sellerItemDetails.dart';
 import 'package:definitely_not_amazon/widgets/custom_textfield.dart';
 import 'package:flutter/material.dart';
@@ -123,21 +125,40 @@ class _AddItemPageState extends State<AddItemPage> {
                             onTap: () async {
                               final form = _formKey.currentState!;
                               if (form.validate()) {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddItemPage2(
-                                            sellerItemDetails:
-                                                SellerItemDetails(
-                                                    name: nameController.text,
-                                                    mrp: double.parse(
-                                                        mrpController.text),
-                                                    quantity: int.parse(
-                                                        quantityController
-                                                            .text),
-                                                    price: double.parse(
-                                                        sellingPriceController
-                                                            .text)))));
+                                try {
+                                  print('getting categories');
+                                  List<Category> categories =
+                                      await HomeScreenViewModel.getCategories();
+                                  if (categories.isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text(
+                                                'No categories found for the item to be in. Please tell admin to add categories first')));
+                                    return;
+                                  } else {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AddItemPage2(
+                                                categories: categories,
+                                                sellerItemDetails:
+                                                    SellerItemDetails(
+                                                        name: nameController
+                                                            .text,
+                                                        mrp: double.parse(
+                                                            mrpController.text),
+                                                        quantity: int.parse(
+                                                            quantityController
+                                                                .text),
+                                                        price: double.parse(
+                                                            sellingPriceController
+                                                                .text)))));
+                                  }
+
+                                  print('got categories');
+                                } catch (e) {
+                                  print(e);
+                                }
                               }
                             },
                             child: Container(

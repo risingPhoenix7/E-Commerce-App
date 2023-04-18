@@ -5,10 +5,12 @@ part 'category.g.dart';
 @JsonSerializable()
 class Category {
   String? name;
+  int? id;
   String? image;
 
   Category({
     this.name,
+    this.id,
     this.image,
   });
 

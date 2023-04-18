@@ -1,4 +1,7 @@
+import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
 import 'package:definitely_not_amazon/screens/home/repository/model/item_details.dart';
+import 'package:definitely_not_amazon/screens/profile/profile_screen.dart';
+import 'package:definitely_not_amazon/screens/seller_screens/add_item.dart';
 import 'package:definitely_not_amazon/screens/seller_screens/viewmodel/uploadSellerDetails.dart';
 import 'package:definitely_not_amazon/widgets/custom_appbar.dart';
 import 'package:definitely_not_amazon/widgets/loader.dart';
@@ -50,6 +53,39 @@ class _SellerViewItemsScreenState extends State<SellerViewItemsScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // add item button in the right corner
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (UserDetailsViewModel.userDetailsModel?.store_address1 == null ||
+                              UserDetailsViewModel
+                                      .userDetailsModel?.store_address2 ==
+                                  null ||
+                              UserDetailsViewModel
+                                  .userDetailsModel!.store_address2!.isEmpty ||
+                              UserDetailsViewModel
+                                  .userDetailsModel!.store_address1!.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text(
+                                    "Please add your store address first")));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ProfileScreen()));
+                          } else {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddItemPage()));
+                          }
+                        },
+                        child: const Text("Add item"),
+                      ),
+                    ),
+                  ),
                   items.isEmpty
                       ? const Expanded(
                           child: Center(child: Text("No items selling/sold")))

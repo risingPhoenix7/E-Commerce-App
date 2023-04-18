@@ -10,7 +10,7 @@ class SellerItemDetails {
   final double? mrp;
   final double? price;
   final int? quantity;
-  final int? category_id;
+   int? category_id;
 
   SellerItemDetails({
     this.name,
