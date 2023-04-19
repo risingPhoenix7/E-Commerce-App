@@ -120,7 +120,12 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                 IconButton(
                   icon: const Icon(Icons.shopping_cart, color: Colors.white),
                   onPressed: () {
-                    Navigator.pushNamed(context, '/cart');
+                    if (UserDetailsViewModel.userDetailsModel == null ||
+                        UserDetailsViewModel.userDetailsModel!.id == null) {
+                      Navigator.pushNamed(context, '/login');
+                    } else {
+                      Navigator.pushNamed(context, '/cart');
+                    }
                     // Add your onPressed logic
                   },
                 ),
