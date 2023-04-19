@@ -14,6 +14,8 @@ class CartViewModel {
   static ValueNotifier<int> removeItemFromCartListener = ValueNotifier(-1);
   static List<CartItem> cartItems = [];
   static ValueNotifier<double> totalPrice = ValueNotifier(0);
+  static ValueNotifier<int> cartCount = ValueNotifier(0);
+  static bool isUpdating = false;
 
   static Future<void> getItemsInCart() async {
     final dio = Dio();
@@ -32,10 +34,13 @@ class CartViewModel {
       }
       return it;
     }).catchError((Object obj) {
-      print('pkoa');
-      print(obj.toString());
-      print('ewefpkoa');
-
+      if (obj is DioError) {
+        final response = obj.response;
+        if (response != null && response.data != null) {
+          final detail = response.data['detail'];
+          throw Exception("Error in getting cart items: $detail");
+        }
+      }
       throw Exception("Error in getting cart Items");
     });
     if (cartItems.isNotEmpty) {
@@ -54,7 +59,13 @@ class CartViewModel {
     List<OrderItem> cartItems = await client
         .getPastOrders(UserDetailsViewModel.userDetailsModel!.id.toString())
         .catchError((Object obj) {
-      print(obj.toString());
+      if (obj is DioError) {
+        final response = obj.response;
+        if (response != null && response.data != null) {
+          final detail = response.data['detail'];
+          throw Exception("Error in getting past orders: $detail");
+        }
+      }
       throw Exception("Error in getting past orders");
     });
     return cartItems;
@@ -80,7 +91,13 @@ class CartViewModel {
       }
       return it;
     }).catchError((Object obj) {
-      print(obj.toString());
+      if (obj is DioError) {
+        final response = obj.response;
+        if (response != null && response.data != null) {
+          final detail = response.data['detail'];
+          throw Exception("Error in getting order details: $detail");
+        }
+      }
       throw Exception("Error in getting order details");
     });
     List<MiniItemDetails> orderItemDetails = singleOrderDetails.order_items;
@@ -88,6 +105,9 @@ class CartViewModel {
   }
 
   static Future<void> addItemToCart(int item_id, int quantity) async {
+    if (isUpdating) {
+      throw Exception("Please wait while we update your cart");
+    }
     final dio = Dio();
     dio.interceptors.add(ChuckerDioInterceptor());
     final client = CartRestClient(dio);
@@ -95,13 +115,22 @@ class CartViewModel {
         UserDetailsViewModel.userDetailsModel!.id == null) {
       throw Exception("Not allowed to add to cart. Please login first");
     }
+    isUpdating = true;
     await client
         .addToCart(UserDetailsViewModel.userDetailsModel!.id.toString(),
             PostCartItem(item_id: item_id, quantity: quantity))
         .catchError((Object obj) {
-      print(obj.toString());
+      isUpdating = false;
+      if (obj is DioError) {
+        final response = obj.response;
+        if (response != null && response.data != null) {
+          final detail = response.data['detail'];
+          throw Exception("Error in getting cart items: $detail");
+        }
+      }
       throw Exception("Error in getting cart Items");
     });
+    isUpdating = false;
   }
 
   static Future<void> placeOrder(
@@ -117,10 +146,18 @@ class CartViewModel {
         .placeOrder(
             UserDetailsViewModel.userDetailsModel!.id.toString(),
             PostOrderDetails(
-                paymentType: paymentType, payment_uid: uid, coupon_code: couponCode))
+                paymentType: paymentType,
+                payment_uid: uid,
+                coupon_code: couponCode))
         .catchError((Object obj) {
-      print(obj.toString());
-      throw Exception("Error in getting cart Items");
+      if (obj is DioError) {
+        final response = obj.response;
+        if (response != null && response.data != null) {
+          final detail = response.data['detail'];
+          throw Exception("Error in placing order: $detail");
+        }
+      }
+      throw Exception("Error in placing order");
     });
   }
 
@@ -136,7 +173,6 @@ class CartViewModel {
 
       // Extract 'detail' field as a double
       double detail = jsonResponse['detail'].toDouble();
-
       return detail;
     } else {
       throw Exception(response.reasonPhrase);

@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 
 import 'screens/login/login_page.dart';
 import 'screens/login/signup_page.dart';
+import 'screens/profile/changeDetailsViewModel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
     await UserDetailsViewModel.getUserDetailsFromSharedPrefs();
+    await ChangeDetailsViewModel.updateProfile();
   } catch (e) {
     print(e);
   }

@@ -182,31 +182,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               screen: SellerViewItemsScreen(),
               name: 'Go to seller home page',
             ),
-            GestureDetector(
-              onTap: () async {
-                await UserDetailsViewModel.logout();
-                Navigator.pushReplacementNamed(context, '/login');
-              },
-              child: Container(
-                height: 100,
-                width: 300,
-                padding: const EdgeInsets.all(8.0),
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 1,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
-                    ),
-                  ],
-                ),
-                child: Center(child: Text("Logout")),
-              ),
-            ),
             const SizedBox(height: 50)
           ],
         ),

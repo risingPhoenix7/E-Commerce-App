@@ -16,7 +16,7 @@ class AddPaymentPage extends StatefulWidget {
 
 class _AddPaymentPageState extends State<AddPaymentPage> {
   final _formKey = GlobalKey<FormState>();
-  String _paymentMethod = 'UPI';
+  String _paymentMethod='';
 
   TextEditingController uidController = TextEditingController();
 
@@ -159,6 +159,8 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                                           _paymentMethod,
                                           uidController.text,
                                           widget.couponCode);
+                                      CartViewModel.cartCount.value = 0;
+                                      CartViewModel.totalPrice.value = 0;
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(const SnackBar(
                                         content:

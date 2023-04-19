@@ -1,4 +1,5 @@
 import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
+import 'package:definitely_not_amazon/screens/cart/viewmodel/cart_viewmodel.dart';
 import 'package:definitely_not_amazon/screens/home/repository/model/mini_item_details.dart';
 import 'package:definitely_not_amazon/screens/home/viewmodel/home_view_model.dart';
 import 'package:definitely_not_amazon/screens/search/view/search_screen.dart';
@@ -135,13 +136,16 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                   child: CircleAvatar(
                     radius: 8,
                     backgroundColor: Colors.orange,
-                    child: Text(
-                      UserDetailsViewModel.userDetailsModel?.cart_count
-                              .toString() ??
-                          '0',
-                      // Replace with the number of items in the cart
-                      style: const TextStyle(fontSize: 12, color: Colors.white),
-                    ),
+                    child: ValueListenableBuilder(
+                        valueListenable: CartViewModel.cartCount,
+                        builder: (context, value, child) {
+                          return Text(
+                            value.toString(),
+                            // Replace with the number of items in the cart
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.white),
+                          );
+                        }),
                   ),
                 ),
               ],

@@ -16,7 +16,6 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   bool isLoading = true;
-  double totalPrice = 0;
   double factor = 1;
   TextEditingController couponController = TextEditingController();
   String? couponCode;
@@ -30,17 +29,19 @@ class _CartScreenState extends State<CartScreen> {
         content: Text(e.toString()),
       ));
     }
-    totalPrice=0;
+    double totalPrice = 0;
+    int totalquantity = 0;
     for (int i = 0; i < CartViewModel.cartItems.length; i++) {
       print('calculating initial');
       int quantity = CartViewModel.cartItems[i].quantity ?? 0;
-      print(quantity);
+      totalquantity = totalquantity + quantity;
       print(CartViewModel.cartItems[i].price ?? 0.0);
       totalPrice =
           totalPrice + ((CartViewModel.cartItems[i].price ?? 0.0) * quantity);
-      print(totalPrice) ;
+      print(totalPrice);
     }
     CartViewModel.totalPrice.value = totalPrice;
+    CartViewModel.cartCount.value = totalquantity;
 
     setState(() {
       isLoading = false;
@@ -142,10 +143,18 @@ class _CartScreenState extends State<CartScreen> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Text('Subtotal (1 item): ',
-                                                style: TextStyle(
-                                                  fontSize: fontSize * 1.2,
-                                                )),
+                                            ValueListenableBuilder(
+                                                valueListenable:
+                                                    CartViewModel.cartCount,
+                                                builder:
+                                                    (context, value, child) {
+                                                  return Text(
+                                                      'Subtotal ($value items): ',
+                                                      style: TextStyle(
+                                                        fontSize:
+                                                            fontSize * 1.2,
+                                                      ));
+                                                }),
                                             Builder(builder: (context) {
                                               return ValueListenableBuilder(
                                                   valueListenable:
@@ -389,6 +398,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                   await CartViewModel.addItemToCart(
                                       widget.cartItem.item_id!,
                                       widget.cartItem.quantity! - 1);
+                                  CartViewModel.cartCount.value--;
                                   widget.cartItem.quantity =
                                       widget.cartItem.quantity! - 1;
                                   CartViewModel.totalPrice.value -=
@@ -434,6 +444,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                 await CartViewModel.addItemToCart(
                                     widget.cartItem.item_id!,
                                     widget.cartItem.quantity! + 1);
+                                CartViewModel.cartCount.value++;
+
                                 widget.cartItem.quantity =
                                     widget.cartItem.quantity! + 1;
                                 CartViewModel.totalPrice.value +=
@@ -464,6 +476,9 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                   widget.cartItem.item_id!;
                               CartViewModel.removeItemFromCartListener
                                   .notifyListeners();
+                              CartViewModel.cartCount.value -=
+                                  widget.cartItem.quantity!;
+
                               CartViewModel.totalPrice.value -=
                                   widget.cartItem.price! *
                                       widget.cartItem.quantity!;

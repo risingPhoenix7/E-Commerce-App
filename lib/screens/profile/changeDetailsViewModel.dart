@@ -1,5 +1,6 @@
 import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:definitely_not_amazon/provider/viewmodel/user_details_viewmodel.dart';
+import 'package:definitely_not_amazon/screens/cart/viewmodel/cart_viewmodel.dart';
 import 'package:dio/dio.dart';
 
 import 'retrofit/changeDetails.dart';
@@ -58,13 +59,13 @@ class ChangeDetailsViewModel {
     final dio = Dio();
     dio.interceptors.add(ChuckerDioInterceptor());
     final client = ChangeDetailsRestClient(dio);
-
     await client
         .updateProfile(UserDetailsViewModel.userDetailsModel!.id!.toString())
         .then((it) async {
       int id = UserDetailsViewModel.userDetailsModel!.id!;
       UserDetailsViewModel.userDetailsModel = it;
       UserDetailsViewModel.userDetailsModel?.id = id;
+      CartViewModel.cartCount.value = it.cart_count ?? 0;
       await UserDetailsViewModel.storeUserDetails();
     }).catchError((Object obj) {
       throw Exception("Error in updating profile");

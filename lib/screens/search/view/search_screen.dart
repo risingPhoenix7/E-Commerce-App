@@ -157,7 +157,10 @@ class ItemDetailsCard extends StatelessWidget {
                       ),
                       itemDetails.status != null &&
                               itemDetails.status!.isNotEmpty
-                          ? Text(itemDetails.status!,
+                          ? Text(
+                              itemDetails.status == "ORDER_PLACED"
+                                  ? "ORDER PLACED"
+                                  : itemDetails.status!,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: fontSize,

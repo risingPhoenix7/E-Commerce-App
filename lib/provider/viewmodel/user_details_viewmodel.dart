@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:definitely_not_amazon/provider/model/user_details_model.dart';
 import 'package:definitely_not_amazon/provider/retrofit/getUserDetails.dart';
+import 'package:definitely_not_amazon/screens/cart/viewmodel/cart_viewmodel.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,6 +19,7 @@ class UserDetailsViewModel {
         .getUserDetails(LoginPostRequestModel(email: email, password: password))
         .then((it) async {
       UserDetailsViewModel.userDetailsModel = it;
+      CartViewModel.cartCount.value = it.cart_count ?? 0;
       await storeUserDetails();
     }).catchError((Object obj) {
       throw Exception("Error in getting user details");
