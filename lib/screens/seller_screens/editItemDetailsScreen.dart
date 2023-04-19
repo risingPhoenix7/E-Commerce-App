@@ -39,6 +39,7 @@ class _EditItemDetailsScreenState extends State<EditItemDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('inside edititemdetails');
     ItemDetails itemDetails = widget.itemDetails;
     var fontSize = MediaQuery.of(context).size.width * 0.015;
     var mobFontSize = MediaQuery.of(context).size.height * 0.03;
@@ -199,53 +200,59 @@ class _EditItemDetailsScreenState extends State<EditItemDetailsScreen> {
                             SizedBox(
                               height: mobFontSize,
                             ),
-                            GestureDetector(
-                              onTap: () async {
-                                if (nameController.text.isEmpty ||
-                                    mrpController.text.isEmpty ||
-                                    priceController.text.isEmpty ||
-                                    descriptionController.text.isEmpty ||
-                                    quantity < 0) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                          content: Text(
-                                              "Please fill all the correct details")));
-                                } else {
-                                  try {
-                                    await SellerScreensViewModel
-                                        .updateSellerItem(SellerItemDetails(
-                                      item_id: itemDetails.id,
-                                      name: nameController.text,
-                                      description: descriptionController.text,
-                                      price: double.parse(priceController.text),
-                                      mrp: double.parse(mrpController.text),
-                                      quantity: quantity,
-                                    ));
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text("Item Updated")));
-                                  } catch (e) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text(e.toString())));
-                                  }
-                                }
-                              },
-                              child: Center(
-                                child: Container(
-                                  height: mobFontSize * 2,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.5,
-                                  decoration: BoxDecoration(
-                                      color: Colors.orange,
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: TextButton(
-                                    onPressed: () {},
-                                    child: Text(
-                                      "Save",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: mobFontSize),
-                                    ),
+                            Center(
+                              child: Container(
+                                height: mobFontSize * 2,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                decoration: BoxDecoration(
+                                    color: Colors.orange,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: TextButton(
+                                  onPressed: () async {
+                                    print("Updating Item");
+                                    print(nameController.text);
+                                    print(mrpController.text);
+                                    print(priceController.text);
+                                    print(descriptionController.text);
+                                    print(quantity);
+                                    if (nameController.text.isEmpty ||
+                                        mrpController.text.isEmpty ||
+                                        priceController.text.isEmpty ||
+                                        descriptionController.text.isEmpty ||
+                                        quantity < 0) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Please fill all the correct details")));
+                                    } else {
+                                      try {
+                                        print("Updating Item");
+                                        await SellerScreensViewModel
+                                            .updateSellerItem(SellerItemDetails(
+                                          item_id: itemDetails.id,
+                                          name: nameController.text,
+                                          description:
+                                              descriptionController.text,
+                                          price: double.parse(
+                                              priceController.text),
+                                          mrp: double.parse(mrpController.text),
+                                          quantity: quantity,
+                                        ));
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text("Item Updated")));
+                                      } catch (e) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(e.toString())));
+                                      }
+                                    }
+                                  },
+                                  child: Text(
+                                    "Save",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: mobFontSize),
                                   ),
                                 ),
                               ),
@@ -474,7 +481,58 @@ class _EditItemDetailsScreenState extends State<EditItemDetailsScreen> {
                                                 borderRadius:
                                                     BorderRadius.circular(10)),
                                             child: TextButton(
-                                              onPressed: () {},
+                                              onPressed: () async {
+                                                print("Updating Item");
+                                                print(nameController.text);
+                                                print(mrpController.text);
+                                                print(priceController.text);
+                                                print(
+                                                    descriptionController.text);
+                                                print(quantity);
+                                                if (nameController
+                                                        .text.isEmpty ||
+                                                    mrpController
+                                                        .text.isEmpty ||
+                                                    priceController
+                                                        .text.isEmpty ||
+                                                    descriptionController
+                                                        .text.isEmpty ||
+                                                    quantity < 0) {
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              "Please fill all the correct details")));
+                                                } else {
+                                                  try {
+                                                    print("Updating Item");
+                                                    await SellerScreensViewModel
+                                                        .updateSellerItem(
+                                                            SellerItemDetails(
+                                                      item_id: itemDetails.id,
+                                                      name: nameController.text,
+                                                      description:
+                                                          descriptionController
+                                                              .text,
+                                                      price: double.parse(
+                                                          priceController.text),
+                                                      mrp: double.parse(
+                                                          mrpController.text),
+                                                      quantity: quantity,
+                                                    ));
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                "Item Updated")));
+                                                  } catch (e) {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(SnackBar(
+                                                            content: Text(
+                                                                e.toString())));
+                                                  }
+                                                }
+                                              },
                                               child: Text(
                                                 "Save",
                                                 style: TextStyle(
@@ -728,10 +786,12 @@ class ReviewsWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       image: DecorationImage(
                                                         image: NetworkImage(
-                                                          (reviews[index].image ==
-                                                                      null )
+                                                          (reviews[index]
+                                                                      .image ==
+                                                                  null)
                                                               ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg"
-                                                              : reviews[index].image!,
+                                                              : reviews[index]
+                                                                  .image!,
                                                         ),
                                                         fit: BoxFit.contain,
                                                       ),
@@ -743,7 +803,7 @@ class ReviewsWidget extends StatelessWidget {
                                           );
                                         },
                                         child: Image.network(
-                                          (reviews[index].image==null)
+                                          (reviews[index].image == null)
                                               ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg"
                                               : reviews[index].image!,
                                           fit: BoxFit.contain,

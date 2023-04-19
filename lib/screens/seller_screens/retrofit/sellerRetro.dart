@@ -14,7 +14,7 @@ abstract class SellerRestClient {
   @GET(Urls.kgetSellerItems)
   Future<List<ItemDetails>> getSellerItems(@Query("userId") String access);
 
-  @PUT(Urls.keditSellerItems)
+  @POST(Urls.keditSellerItems)
   Future<void> updateSellerItem(@Query("userId") String access,
       @Body() SellerItemDetails sellerItemDetails);
 }

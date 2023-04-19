@@ -43,6 +43,7 @@ class _SellerViewItemsScreenState extends State<SellerViewItemsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('inside build of view all items');
     var deviceType = getDeviceType(MediaQuery.of(context).size);
 
     return CustomScaffold(
@@ -119,6 +120,7 @@ class SellerItemDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('building seller items');
     return GestureDetector(
       onTap: () async {
         try {
@@ -134,7 +136,6 @@ class SellerItemDetailsCard extends StatelessWidget {
                   builder: (context) => EditItemDetailsScreen(
                         itemDetails: itemDetails,
                       )));
-          print("Hello");
         } catch (e) {
           print(e);
           ScaffoldMessenger.of(context)

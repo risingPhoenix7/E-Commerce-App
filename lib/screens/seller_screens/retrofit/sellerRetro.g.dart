@@ -56,7 +56,7 @@ class _SellerRestClient implements SellerRestClient {
     final _data = <String, dynamic>{};
     _data.addAll(sellerItemDetails.toJson());
     await _dio.fetch<void>(_setStreamType<void>(Options(
-      method: 'PUT',
+      method: 'POST',
       headers: _headers,
       extra: _extra,
     )

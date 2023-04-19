@@ -89,7 +89,7 @@ class SellerScreensViewModel {
             sellerItemDetails)
         .catchError((Object obj) {
       print(obj.toString());
-      throw Exception("Error in getting cart Items");
+      throw Exception("Error in updating items");
     });
   }
 }
