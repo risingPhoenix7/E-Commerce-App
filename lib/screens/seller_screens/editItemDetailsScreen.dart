@@ -33,9 +33,7 @@ class _EditItemDetailsScreenState extends State<EditItemDetailsScreen> {
     nameController.text = widget.itemDetails.name!;
     priceController.text = widget.itemDetails.price.toString();
     mrpController.text = widget.itemDetails.mrp.toString();
-    quantity = widget.itemDetails.quantity!;
-
-    // TODO: implement initState
+    quantity = widget.itemDetails.quantity ?? 0;
     super.initState();
   }
 
@@ -730,13 +728,10 @@ class ReviewsWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       image: DecorationImage(
                                                         image: NetworkImage(
-                                                          (reviews[index].imageUrls ==
-                                                                      null ||
-                                                                  reviews[index]
-                                                                      .imageUrls!
-                                                                      .isEmpty)
+                                                          (reviews[index].image ==
+                                                                      null )
                                                               ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg"
-                                                              : "Urls.kBaseUrl${reviews[index].imageUrls![0]}",
+                                                              : reviews[index].image!,
                                                         ),
                                                         fit: BoxFit.contain,
                                                       ),
@@ -748,12 +743,9 @@ class ReviewsWidget extends StatelessWidget {
                                           );
                                         },
                                         child: Image.network(
-                                          (reviews[index].imageUrls == null ||
-                                                  reviews[index]
-                                                      .imageUrls!
-                                                      .isEmpty)
+                                          (reviews[index].image==null)
                                               ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg"
-                                              : "https://ujjwalaggarwal.pythonanywhere.com${reviews[index].imageUrls![0]}",
+                                              : reviews[index].image!,
                                           fit: BoxFit.contain,
                                         ),
                                       ),

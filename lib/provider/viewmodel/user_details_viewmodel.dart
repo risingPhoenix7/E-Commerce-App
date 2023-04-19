@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:chucker_flutter/chucker_flutter.dart';
 import 'package:definitely_not_amazon/provider/model/user_details_model.dart';
 import 'package:definitely_not_amazon/provider/retrofit/getUserDetails.dart';
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserDetailsViewModel {
   static UserDetailsModel? userDetailsModel;
@@ -13,8 +16,9 @@ class UserDetailsViewModel {
 
     await client
         .getUserDetails(LoginPostRequestModel(email: email, password: password))
-        .then((it) {
+        .then((it) async {
       UserDetailsViewModel.userDetailsModel = it;
+      await storeUserDetails();
     }).catchError((Object obj) {
       throw Exception("Error in getting user details");
     });
@@ -32,5 +36,33 @@ class UserDetailsViewModel {
         .catchError((Object obj) {
       throw Exception("Error in creating user");
     });
+  }
+
+  static Future<void> storeUserDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (userDetailsModel == null) {
+      throw Exception("User details not found");
+    } else {
+      String userJson2 = jsonEncode(userDetailsModel!.toJson());
+      await prefs.setString('userDetails', userJson2);
+    }
+  }
+
+  static Future<void> getUserDetailsFromSharedPrefs() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userJson = prefs.getString('userDetails');
+    if (userJson == null) {
+      throw Exception("User details not found");
+    } else {
+      print(userJson);
+      Map<String, dynamic> userMap = json.decode(userJson);
+      userDetailsModel = UserDetailsModel.fromJson(userMap);
+    }
+  }
+
+  static Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    userDetailsModel = null;
   }
 }

@@ -42,12 +42,12 @@ class ReviewDetails {
   final String? description;
   final String? reviewer_name;
   final double? rating;
-  final List<String>? imageUrls;
+  String? image;
 
   ReviewDetails({
     this.title,
     this.description,
-    this.imageUrls,
+    this.image,
     this.reviewer_name,
     this.rating,
   });

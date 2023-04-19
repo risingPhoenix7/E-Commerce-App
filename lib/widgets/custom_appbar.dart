@@ -109,14 +109,11 @@ class CustomAppBar extends StatelessWidget with PreferredSizeWidget {
                         ? '/login'
                         : '/profile');
               },
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                    UserDetailsViewModel.userDetailsModel == null
-                        ? 'Sign In'
-                        : 'Hello,\n${UserDetailsViewModel.userDetailsModel!.first_name ?? 'NA'}',
-                    style: const TextStyle(color: Colors.white, fontSize: 10)),
-              ),
+              child: Text(
+                  UserDetailsViewModel.userDetailsModel == null
+                      ? 'Sign In'
+                      : 'Profile',
+                  style: const TextStyle(color: Colors.white, fontSize: 15)),
             ),
             Stack(
               children: [

@@ -30,39 +30,26 @@ class _CartScreenState extends State<CartScreen> {
         content: Text(e.toString()),
       ));
     }
+    totalPrice=0;
     for (int i = 0; i < CartViewModel.cartItems.length; i++) {
+      print('calculating initial');
       int quantity = CartViewModel.cartItems[i].quantity ?? 0;
+      print(quantity);
+      print(CartViewModel.cartItems[i].price ?? 0.0);
       totalPrice =
-          totalPrice + (CartViewModel.cartItems[i].price ?? 0.0 * quantity);
-      totalPrice = totalPrice * factor;
+          totalPrice + ((CartViewModel.cartItems[i].price ?? 0.0) * quantity);
+      print(totalPrice) ;
     }
+    CartViewModel.totalPrice.value = totalPrice;
+
     setState(() {
       isLoading = false;
     });
   }
 
-  calculateTotalPrice() {
-    double totalPrice = 0;
-    for (int i = 0; i < CartViewModel.cartItems.length; i++) {
-      int quantity = CartViewModel.cartItems[i].quantity ?? 0;
-      totalPrice =
-          totalPrice + (CartViewModel.cartItems[i].price ?? 0.0 * quantity);
-      if (mounted) {
-        setState(() {
-          this.totalPrice = totalPrice * factor;
-        });
-      }
-    }
-  }
-
   @override
   void initState() {
     getCartItems();
-
-    CartViewModel.refreshTotal.addListener(() {
-      print('goes in here');
-      calculateTotalPrice();
-    });
     CartViewModel.removeItemFromCartListener.addListener(() {
       if (CartViewModel.removeItemFromCartListener.value == -1) {
         return;
@@ -159,11 +146,22 @@ class _CartScreenState extends State<CartScreen> {
                                                 style: TextStyle(
                                                   fontSize: fontSize * 1.2,
                                                 )),
-                                            Text('₹ $totalPrice ',
-                                                style: TextStyle(
-                                                    fontSize: fontSize * 1.2,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
+                                            Builder(builder: (context) {
+                                              return ValueListenableBuilder(
+                                                  valueListenable:
+                                                      CartViewModel.totalPrice,
+                                                  builder:
+                                                      (context, value, child) {
+                                                    return Text(
+                                                        '₹ ${value * factor} ',
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                fontSize * 1.2,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold));
+                                                  });
+                                            }),
                                           ],
                                         ),
                                       ),
@@ -249,9 +247,7 @@ class _CartScreenState extends State<CartScreen> {
                                                 couponCode =
                                                     couponController.text;
                                                 factor = 1 - percentage / 100;
-                                                setState(() {
-                                                  calculateTotalPrice();
-                                                });
+
                                                 ScaffoldMessenger.of(context)
                                                     .showSnackBar(SnackBar(
                                                   content: Text(
@@ -299,7 +295,6 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   updateTotalPrice() {
     totalPrice = (widget.cartItem.price ?? 0.0) * widget.cartItem.quantity!;
     print('updated, notify listeners');
-    CartViewModel.refreshTotal.notifyListeners();
   }
 
   @override
@@ -396,6 +391,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                       widget.cartItem.quantity! - 1);
                                   widget.cartItem.quantity =
                                       widget.cartItem.quantity! - 1;
+                                  CartViewModel.totalPrice.value -=
+                                      widget.cartItem.price!;
                                   updateTotalPrice();
                                   setState(() {});
                                 } catch (e) {
@@ -439,6 +436,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                     widget.cartItem.quantity! + 1);
                                 widget.cartItem.quantity =
                                     widget.cartItem.quantity! + 1;
+                                CartViewModel.totalPrice.value +=
+                                    widget.cartItem.price!;
                                 updateTotalPrice();
                                 setState(() {});
                               } catch (e) {
@@ -465,6 +464,9 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                   widget.cartItem.item_id!;
                               CartViewModel.removeItemFromCartListener
                                   .notifyListeners();
+                              CartViewModel.totalPrice.value -=
+                                  widget.cartItem.price! *
+                                      widget.cartItem.quantity!;
                             } catch (e) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(content: Text(e.toString())));

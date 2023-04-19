@@ -42,9 +42,7 @@ ReviewDetails _$ReviewDetailsFromJson(Map<String, dynamic> json) =>
     ReviewDetails(
       title: json['title'] as String?,
       description: json['description'] as String?,
-      imageUrls: (json['imageUrls'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      image: json['image'] as String?,
       reviewer_name: json['reviewer_name'] as String?,
       rating: (json['rating'] as num?)?.toDouble(),
     );
@@ -55,5 +53,5 @@ Map<String, dynamic> _$ReviewDetailsToJson(ReviewDetails instance) =>
       'description': instance.description,
       'reviewer_name': instance.reviewer_name,
       'rating': instance.rating,
-      'imageUrls': instance.imageUrls,
+      'image': instance.image,
     };

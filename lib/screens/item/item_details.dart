@@ -388,7 +388,7 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                             child: TextButton(
                                               onPressed: () async {
                                                 if (UserDetailsViewModel
-                                                    .userDetailsModel ==
+                                                        .userDetailsModel ==
                                                     null) {
                                                   Navigator.push(
                                                       context,
@@ -403,8 +403,8 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                       "UserDetailsViewModel.userDetailsModel!.delivery_address2 ${UserDetailsViewModel.userDetailsModel!.delivery_address2}");
                                                   if (UserDetailsViewModel.userDetailsModel!.delivery_address2 == null ||
                                                       UserDetailsViewModel
-                                                          .userDetailsModel!
-                                                          .delivery_address1 ==
+                                                              .userDetailsModel!
+                                                              .delivery_address1 ==
                                                           null ||
                                                       UserDetailsViewModel
                                                           .userDetailsModel!
@@ -414,27 +414,29 @@ class _ItemDetailsViewState extends State<ItemDetailsView> {
                                                           .userDetailsModel!
                                                           .delivery_address1!
                                                           .isEmpty) {
-                                                    ScaffoldMessenger.of(context)
+                                                    ScaffoldMessenger.of(
+                                                            context)
                                                         .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            "Please add delivery address in your profile")));
+                                                            content: Text(
+                                                                "Please add delivery address in your profile")));
                                                   } else {
                                                     await CartViewModel
                                                         .addItemToCart(
-                                                        itemDetails.id!,
-                                                        quantity);
-                                                    ScaffoldMessenger.of(context)
+                                                            itemDetails.id!,
+                                                            quantity);
+                                                    ScaffoldMessenger.of(
+                                                            context)
                                                         .showSnackBar(SnackBar(
-                                                        content: Text(
-                                                            "Item added to cart")));
+                                                            content: Text(
+                                                                "Item added to cart")));
                                                     Navigator.pushNamed(
                                                         context, '/cart');
                                                   }
                                                 } catch (e) {
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(SnackBar(
-                                                      content:
-                                                      Text(e.toString())));
+                                                          content: Text(
+                                                              e.toString())));
                                                 }
                                               },
                                               child: Text(
@@ -808,13 +810,12 @@ class ReviewsWidget extends StatelessWidget {
                                                     decoration: BoxDecoration(
                                                       image: DecorationImage(
                                                         image: NetworkImage(
-                                                          (reviews[index].imageUrls ==
-                                                                      null ||
-                                                                  reviews[index]
-                                                                      .imageUrls!
-                                                                      .isEmpty)
+                                                          (reviews[index]
+                                                                      .image ==
+                                                                  null)
                                                               ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg"
-                                                              : "Urls.kBaseUrl${reviews[index].imageUrls![0]}",
+                                                              : reviews[index]
+                                                                  .image!,
                                                         ),
                                                         fit: BoxFit.contain,
                                                       ),
@@ -826,12 +827,9 @@ class ReviewsWidget extends StatelessWidget {
                                           );
                                         },
                                         child: Image.network(
-                                          (reviews[index].imageUrls == null ||
-                                                  reviews[index]
-                                                      .imageUrls!
-                                                      .isEmpty)
+                                          (reviews[index].image == null)
                                               ? "https://thumbs.dreamstime.com/z/no-image-available-icon-flat-vector-no-image-available-icon-flat-vector-illustration-132482953.jpg"
-                                              : "https://ujjwalaggarwal.pythonanywhere.com${reviews[index].imageUrls![0]}",
+                                              : reviews[index].image!,
                                           fit: BoxFit.contain,
                                         ),
                                       ),

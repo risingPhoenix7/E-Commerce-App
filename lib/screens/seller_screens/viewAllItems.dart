@@ -122,13 +122,21 @@ class SellerItemDetailsCard extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         try {
+          print(UserDetailsViewModel.userDetailsModel!.store_address1!);
+          print(itemDetails.description);
+          print(itemDetails.name);
+          print(itemDetails.price.toString());
+          print(itemDetails.mrp.toString());
+          print(itemDetails.quantity);
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => EditItemDetailsScreen(
                         itemDetails: itemDetails,
                       )));
+          print("Hello");
         } catch (e) {
+          print(e);
           ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: Text(e.toString())));
         }

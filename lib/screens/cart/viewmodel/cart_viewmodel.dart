@@ -12,8 +12,8 @@ import 'package:http/http.dart' as http;
 
 class CartViewModel {
   static ValueNotifier<int> removeItemFromCartListener = ValueNotifier(-1);
-  static ChangeNotifier refreshTotal = ChangeNotifier();
   static List<CartItem> cartItems = [];
+  static ValueNotifier<double> totalPrice = ValueNotifier(0);
 
   static Future<void> getItemsInCart() async {
     final dio = Dio();

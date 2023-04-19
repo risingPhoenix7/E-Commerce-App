@@ -33,8 +33,10 @@ class HomeScreenViewModel {
     List<MiniItemDetails> itemDetails =
         await client.getItemsForSearch(searchString).then((it) {
       for (int i = 0; i < it.length; i++) {
+        print(it[i].image.toString());
         it[i].image =
             it[i].image = Urls.kImageAppendUrl + it[i].image.toString();
+        print(it[i].image.toString());
       }
       return it;
     }).catchError((Object obj) {
@@ -52,8 +54,10 @@ class HomeScreenViewModel {
     List<MiniItemDetails> itemDetails =
         await client.getItemsForCategory(categoryString).then((it) {
       for (int i = 0; i < it.length; i++) {
+        print(it[i].image.toString());
         it[i].image =
             it[i].image = Urls.kImageAppendUrl + it[i].image.toString();
+        print(it[i].image.toString());
       }
       return it;
     }).catchError((Object obj) {
@@ -90,7 +94,24 @@ class HomeScreenViewModel {
         await client.getItemFullDetails(item_id.toString()).then((it) {
       if (it.images != null && it.images!.isNotEmpty) {
         for (int i = 0; i < it.images!.length; i++) {
+          print(it.images![i].toString());
           it.images![i] = Urls.kImageAppendUrl + it.images![i].toString();
+          print(it.images![i].toString());
+        }
+      }
+      print('printing review image stuff');
+
+      if (it.reviews != null && it.reviews!.isNotEmpty) {
+        for (int i = 0; i < it.reviews!.length; i++) {
+          print(it.reviews![i].image.toString());
+          if (it.reviews![i].image == null) {
+            it.reviews![i].image =
+                " https://ujjwalaggarwal.pythonanywhere.com/backend-media/default_review_image.jpg";
+          } else {
+            it.reviews![i].image =
+                Urls.kImageAppendUrl + it.reviews![i].image.toString();
+            print(it.reviews![i].image.toString());
+          }
         }
       }
 

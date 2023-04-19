@@ -16,7 +16,7 @@ class ChangeDetailsViewModel {
             UserDetailsViewModel.userDetailsModel!.id!.toString())
         .then((it) {})
         .catchError((Object obj) {
-      throw Exception("Error in getting categories");
+      throw Exception("Error in changing user details");
     });
   }
 
@@ -25,8 +25,10 @@ class ChangeDetailsViewModel {
     final dio = Dio();
     dio.interceptors.add(ChuckerDioInterceptor());
     final client = ChangeDetailsRestClient(dio);
-    if(UserDetailsViewModel.userDetailsModel == null || UserDetailsViewModel.userDetailsModel!.id == null){
-      throw Exception("Not allowed to access change details. Please login first");
+    if (UserDetailsViewModel.userDetailsModel == null ||
+        UserDetailsViewModel.userDetailsModel!.id == null) {
+      throw Exception(
+          "Not allowed to access change details. Please login first");
     }
     await client
         .changeCustomerDetails(userDetailsModel,
@@ -48,7 +50,7 @@ class ChangeDetailsViewModel {
             UserDetailsViewModel.userDetailsModel!.id!.toString())
         .then((it) {})
         .catchError((Object obj) {
-      throw Exception("Error in getting categories");
+      throw Exception("Error in changing seller details");
     });
   }
 
@@ -58,14 +60,14 @@ class ChangeDetailsViewModel {
     final client = ChangeDetailsRestClient(dio);
 
     await client
-        .updateProfile(
-           UserDetailsViewModel.userDetailsModel!.id!.toString())
-        .then((it) {
+        .updateProfile(UserDetailsViewModel.userDetailsModel!.id!.toString())
+        .then((it) async {
       int id = UserDetailsViewModel.userDetailsModel!.id!;
       UserDetailsViewModel.userDetailsModel = it;
       UserDetailsViewModel.userDetailsModel?.id = id;
+      await UserDetailsViewModel.storeUserDetails();
     }).catchError((Object obj) {
-      throw Exception("Error in getting categories");
+      throw Exception("Error in updating profile");
     });
   }
 }
